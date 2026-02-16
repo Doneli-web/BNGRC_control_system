@@ -1,79 +1,95 @@
 TODO LIST (BNGRC): 
-    - Technologie : PHPflight, Mysql
-    - Base : DATABASE(BNGRC)
-    - Dispatch :
-        - Base :
-            - Table : 
-                - BNGRC_region(id, name)
-                - BNGRC_ville(id, name, idRegion)
-                - BNGRC_typeDon(id, name)
-                - BNGRC_article(id, name, idType, prix_unitaire)
-                - BNGRC_besoin(id, idVille, idArticle, quantite, date_de_saisie)
-                - BNGRC_don(id, idArticle, quantite, date_de_saisie)
+    - [OK] Technologie : PHPflight, Mysql
+    - [OK] Base : DATABASE(BNGRC)
+    - [OK] Dispatch :
+        - [OK] Base :
+            - [OK] Table : 
+                - [OK] BNGRC_region(id, name)
+                - [OK] BNGRC_ville(id, name, idRegion)
+                - [OK] BNGRC_typeDon(id, name)
+                - [OK] BNGRC_article(id, name, idType, prix_unitaire)
+                - [OK] BNGRC_besoin(id, idVille, idArticle, quantite, date_de_saisie, status)
+                - [OK] BNGRC_don(id, idArticle, quantite, date_de_saisie, status)
+                - [OK] BNGRC_dispatch(id, idDon, idBesoin, quantite_attribuee, date_dispatch)
 
-        - Model :
-            - regionModel:
-                - addRegion(name)
-                - findAll()
-                - findById(id)
-            - villeModel :
-                - addVille(name)
-                - findAll()
-                - findById(id)
-                - findAllBesoin()
-                - findAllDon()
-                - findVilleRegion()
-                - findAllVilleInfo()
-            - typeDonModel :
-                - addType(name)
-                - findAll()
-                - findById(id)
-            - articleModel :
-                - addArticle(name, idType, prix_unitaire)
-                - findAll()
-                - findById()
+        - [OK] Model :
+            - [OK] regionModel:
+                - [OK] addRegion(name)
+                - [OK] findAll()
+                - [OK] findById(id)
+            - [OK] villeModel :
+                - [OK] addVille(name)
+                - [OK] findAll()
+                - [OK] findById(id)
+                - [OK] findAllBesoin()
+                - [OK] findAllDon()
+                - [OK] findVilleRegion()
+                - [OK] findAllVilleInfo()
+                - [OK] getDashboard()
+            - [OK] typeDonModel :
+                - [OK] addType(name)
+                - [OK] findAll()
+                - [OK] findById(id)
+            - [OK] articleModel :
+                - [OK] addArticle(name, idType, prix_unitaire)
+                - [OK] findAll()
+                - [OK] findById()
             - [OK] besoinModel :
                 - [OK] addBesoin(idVille, idArticle, quantite, date_de_saisie)
                 - [Ok] findAll()
                 - [Ok] findById(id)
                 - [Ok] findAllBesoinInfo()
                 - [Ok] deleteBesoin(id)
-            - donModel :
-                - addDon(idArticle, quantite, date_de_saisie)
-                - findAll()
-                - findById()
-                - findAllDonInfo()
-        - Controller : 
-            - regionController : Model(regionModel)
-                - addRegion(name)
-                - getAll()
-                - getById(id)
-            - villeController : villeModel
-                - addVille(name)
-                - getAll()
-                - getById(id)
-                - getAllBesoin()
-                - getAllDon()
-                - getVilleRegion()
-                - getAllVilleInfo()
-            - typeDonController : Model(TypeDonModel)
-                - addType(name)
-                - getAll()
-                - getById(id)
-            - articleController : Model(articleModel)
-                - addArticle(name, idType, prix_unitaire)
-                - getAll()
-                - getById()
-            - besoinController : Model(besoinModel)
-                - addBesoin(idVille, idArticle, quantite, date_de_saisie)
-                - getAll()
-                - getById(id)
-                - getAllBesoinInfo()
-            - donController : Model(donModel)
-                - addDon(idArticle, quantite, date_de_saisie)
-                - getAll()
-                - getById()
-                - getAllDonInfo()
-        - Frontend :
-            - Integration :
-                - 
+            - [OK] donModel :
+                - [OK] addDon(idArticle, quantite, date_de_saisie)
+                - [OK] findAll()
+                - [OK] findById()
+                - [OK] findAllDonInfo()
+            - [OK] dispatchModel :
+                - [OK] clearAll()
+                - [OK] insert(idDon, idBesoin, quantite, dateDispatch)
+        - [OK] Controller : 
+            - [OK] regionController : Model(regionModel)
+                - [OK] addRegion(name)
+                - [OK] getAll()
+                - [OK] getById(id)
+            - [OK] villeController : villeModel
+                - [OK] addVille(name)
+                - [OK] getAll()
+                - [OK] getById(id)
+                - [OK] getAllBesoin()
+                - [OK] getAllDon()
+                - [OK] getVilleRegion()
+                - [OK] getAllVilleInfo()
+                - [OK] getDashboard()
+            - [OK] typeDonController : Model(TypeDonModel)
+                - [OK] addType(name)
+                - [OK] getAll()
+                - [OK] getById(id)
+            - [OK] articleController : Model(articleModel)
+                - [OK] addArticle(name, idType, prix_unitaire)
+                - [OK] getAll()
+                - [OK] getById()
+            - [OK] besoinController : Model(besoinModel)
+                - [OK] addBesoin(idVille, idArticle, quantite, date_de_saisie)
+                - [OK] getAll()
+                - [OK] getById(id)
+                - [OK] getAllBesoinInfo()
+            - [OK] donController : Model(donModel)
+                - [OK] addDon(idArticle, quantite, date_de_saisie)
+                - [OK] getAll()
+                - [OK] getById()
+                - [OK] getAllDonInfo()
+            - [OK] dispatchController : Model(dispatchModel)
+                - [OK] clearAll()
+                - [OK] insert(idDon, idBesoin, quantite, dateDispatch)
+                - [OK] simulateDispatch() (Lancement de l'algo de dispatch et retourne les resultats pour affichage)
+        - [OK] Frontend (utilisation des templates):
+            - [OK] Integration :
+                - [OK] Integration de la page d'accueil des donnees (total villes, total dons, statistiques basiques)
+                - [OK] Integration de la page de gestion des besoins (ajout, suppression, liste)
+                - [OK] Integration de la page de gestion des dons (ajout, suppression, liste)
+                - [OK] Integration du bouton de simulation de dispatch (qui va lancer l'algo de dispatch et afficher les resultats)
+            - [OK] Design :
+                - [OK] Design basique pour rendre les pages presentables (utilisation de bootstrap ou autre framework CSS)
+                - [OK] Affichage clair des informations (tableaux, cartes, graphiques simples)

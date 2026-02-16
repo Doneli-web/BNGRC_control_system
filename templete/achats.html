@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Achats - BNGRC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .purchase-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .money-available {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: var(--text-primary);
+            padding: var(--spacing-lg);
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .money-amount {
+            font-family: var(--font-display);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: var(--spacing-sm) 0;
+        }
+        
+        .fee-config {
+            background: var(--bg-tertiary);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .purchase-summary {
+            background: var(--bg-tertiary);
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-top: var(--spacing-md);
+        }
+        
+        .calculation-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-xs) 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+        
+        .calculation-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+            padding-top: var(--spacing-sm);
+        }
+        
+        .alert-box {
+            padding: var(--spacing-md);
+            border-radius: 8px;
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .alert-box.error {
+            background: rgba(196, 69, 54, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+        
+        .alert-box.success {
+            background: rgba(74, 139, 111, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+        
+        .alert-box.warning {
+            background: rgba(217, 127, 58, 0.1);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 40 40" fill="none">
+                        <path d="M20 5L35 15V25L20 35L5 25V15L20 5Z" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="20" cy="20" r="4" fill="currentColor"/>
+                    </svg>
+                </div>
+                <span class="brand-text">BNGRC<span class="brand-sub">Gestion des Dons</span></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Tableau de bord</a></li>
+                <li><a href="besoins.html">Besoins</a></li>
+                <li><a href="dons.html">Dons</a></li>
+                <li><a href="achats.html" class="active">Achats</a></li>
+                <li><a href="simulation.html">Simulation</a></li>
+                <li><a href="recapitulatif.html">Récapitulatif</a></li>
+            </ul>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-content">
+            <div class="breadcrumb">
+                <a href="index.html">Accueil</a>
+                <span>/</span>
+                <span>Gestion des achats</span>
+            </div>
+            <h1 class="page-title">Gestion des achats</h1>
+            <p class="page-description">Utilisez les dons en argent pour acheter des articles et couvrir les besoins restants</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content-main">
+        <div class="content-container">
+            
+            <!-- Argent disponible -->
+            <div class="money-available">
+                <div style="font-size: 0.9rem; opacity: 0.9;">💰 Dons en argent disponibles</div>
+                <div class="money-amount" id="argentDisponible">0 Ar</div>
+                <div style="font-size: 0.85rem; opacity: 0.8;">Mis à jour automatiquement</div>
+            </div>
+
+            <!-- Configuration des frais -->
+            <div class="purchase-card">
+                <h3 style="margin-bottom: var(--spacing-md);">⚙️ Configuration des frais d'achat</h3>
+                <div class="fee-config">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fraisAchat">Pourcentage de frais d'achat (%)</label>
+                            <input type="number" id="fraisAchat" min="0" max="100" step="0.1" 
+                                   value="10" onchange="saveFraisAchat()">
+                        </div>
+                        <div class="form-group">
+                            <div style="padding-top: 1.8rem;">
+                                <span style="font-size: 0.9rem; color: var(--text-secondary);">
+                                    Exemple : Pour 100,000 Ar → Total avec frais : 
+                                    <strong id="exempleTotal">110,000 Ar</strong>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulaire d'achat -->
+            <div class="purchase-card">
+                <div class="form-header">
+                    <h2>🛒 Effectuer un achat</h2>
+                </div>
+                
+                <div id="alertContainer"></div>
+
+                <form id="achatForm" class="styled-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="villeAchat">Ville bénéficiaire *</label>
+                            <select id="villeAchat" required onchange="loadBesoinsRestants()">
+                                <option value="">Sélectionner une ville</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="categorieAchat">Catégorie *</label>
+                            <select id="categorieAchat" required onchange="loadArticlesAchat()">
+                                <option value="">Sélectionner une catégorie</option>
+                                <option value="nature">En nature</option>
+                                <option value="materiel">Matériaux</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="articleAchat">Article *</label>
+                            <select id="articleAchat" required onchange="updatePrixUnitaireAchat()">
+                                <option value="">Sélectionner un article</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantiteAchat">Quantité à acheter *</label>
+                            <input type="number" id="quantiteAchat" min="1" step="1" required 
+                                   placeholder="Ex: 100" onchange="calculateAchat()">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="prixUnitaireAchat">Prix unitaire (Ar)</label>
+                            <input type="text" id="prixUnitaireAchat" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Besoin restant pour cette ville</label>
+                            <input type="text" id="besoinRestant" readonly 
+                                   style="background: rgba(217, 127, 58, 0.1); font-weight: 600;">
+                        </div>
+                    </div>
+
+                    <!-- Résumé du calcul -->
+                    <div class="purchase-summary" id="purchaseSummary" style="display: none;">
+                        <h4 style="margin-bottom: var(--spacing-sm);">📊 Résumé de l'achat</h4>
+                        <div class="calculation-row">
+                            <span>Montant de base</span>
+                            <span id="montantBase">0 Ar</span>
+                        </div>
+                        <div class="calculation-row">
+                            <span>Frais d'achat (<span id="fraisPercent">10</span>%)</span>
+                            <span id="montantFrais">0 Ar</span>
+                        </div>
+                        <div class="calculation-row">
+                            <span>TOTAL À PAYER</span>
+                            <span id="montantTotal">0 Ar</span>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: var(--spacing-lg);">
+                        <button type="button" class="btn-secondary" onclick="resetAchatForm()">Annuler</button>
+                        <button type="submit" class="btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                            Valider l'achat
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Liste des achats -->
+            <div class="list-section">
+                <div class="list-header">
+                    <h2>📋 Historique des achats</h2>
+                    <div class="list-actions">
+                        <input type="search" class="search-input" placeholder="Rechercher..." 
+                               onkeyup="filterAchats(this.value)">
+                        <select class="filter-select-small" onchange="filterAchatsByVille(this.value)">
+                            <option value="">Toutes les villes</option>
+                        </select>
+                        <select class="filter-select-small" onchange="filterAchatsByCategorie(this.value)">
+                            <option value="">Toutes catégories</option>
+                            <option value="nature">En nature</option>
+                            <option value="materiel">Matériaux</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Ville</th>
+                                <th>Catégorie</th>
+                                <th>Article</th>
+                                <th>Quantité</th>
+                                <th>Prix unitaire</th>
+                                <th>Montant base</th>
+                                <th>Frais</th>
+                                <th>Total payé</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="achatsTableBody">
+                            <tr>
+                                <td colspan="10" style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                                    Aucun achat enregistré pour le moment
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>BNGRC</h3>
+                    <p>Bureau National de Gestion des Risques et des Catastrophes</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>Navigation</h4>
+                        <a href="index.html">Tableau de bord</a>
+                        <a href="besoins.html">Gestion des besoins</a>
+                        <a href="dons.html">Gestion des dons</a>
+                    </div>
+                    <div class="link-group">
+                        <h4>Ressources</h4>
+                        <a href="#">Documentation</a>
+                        <a href="#">Support</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 BNGRC. Projet S3 - Système de gestion des dons.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="achats.js"></script>
+</body>
+</html>
