@@ -49,6 +49,11 @@ class DonModel{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getTotalDons(){
+        $stmt = $this->db->query("SELECT COUNT(*) FROM BNGRC_don");
+        return $stmt->fetchColumn();
+    }
+
     public function delete($id){
         
         $check = $this->db->prepare("SELECT id FROM BNGRC_don WHERE id = ?");

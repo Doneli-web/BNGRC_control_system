@@ -87,6 +87,11 @@ class VilleModel{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getTotalVIlle(){
+        $stmt = $this->db->query("SELECT COUNT(*) FROM BNGRC_ville");
+        return $stmt->fetchColumn();
+    }
+
     public function getDetailVille($idVille) {
        
         $ville = $this->findById($idVille);

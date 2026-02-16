@@ -20,12 +20,8 @@ $router->group('/', function(Router $router) use ($app) {
 
     // $router->get('/', [ UserController::class, 'getTrajets' ]);
     $router->get('/', function() use($app){
-        // Fournir la vue avec quelques métriques basiques provenant de la BD
-        $db = Flight::db();
-        $stmt = $db->query("SELECT COUNT(*) FROM BNGRC_ville");
-        $totalVilles = (int)$stmt->fetchColumn();
-        $stmt2 = $db->query("SELECT COUNT(*) FROM BNGRC_don");
-        $totalDons = (int)$stmt2->fetchColumn();
+        $totalVilles = VilleController::getTotalVilles();
+        $totalDons = DonController::getTotalDons();
 
         $app->render('index', [
             'total_villes' => $totalVilles,
@@ -36,20 +32,6 @@ $router->group('/', function(Router $router) use ($app) {
     // Route pour lancer la simulation côté serveur
     $router->post('/simulate', function() use($app){
         \app\controllers\DispatchController::simulate();
-    });
-    $router->get('/regions/@id', function($id) use($app){
-        $region = RegionController::getRegionById($id);
-        $app->render('villes', [
-            "region"=>$region
-        ]);
-    });
-
-    $router->post('/regions', function($id) use($app){
-        $RegionName = $_POST["name"];
-        RegionController::addRegion($RegionName);
-        $app->render('villes', [
-            "message"=>"Region added successfully"
-        ]);
     });
 
     $router->get('/besoins', function() use($app){

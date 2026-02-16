@@ -50,5 +50,10 @@ class VilleController{
         return $VilleModel->getDetailVille($idVille);
     }
 
+    public static function getTotalVilles() {
+        $VilleModel = new VilleModel(Flight::db());
+        return $VilleModel->getTotalVIlle();
+    }
+
 
 }

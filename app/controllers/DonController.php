@@ -92,4 +92,9 @@ class DonController{
             $_SESSION['error'] = "Don introuvable";
         }
     }
+    
+    public static function getTotalDons(){
+        $DonModel = new DonModel(Flight::db());
+        return $DonModel->getTotalDons();
+    }
 }
