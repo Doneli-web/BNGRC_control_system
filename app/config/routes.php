@@ -111,16 +111,6 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::redirect('/dons');
     });
 
-<<<<<<< HEAD
-    $router->get('/simulation', function() use($app){
-        $app->render('simulation', [
-        ]);
-    });
-
-    $router->get('/villes', function() use($app){
-        $app->render('villes', [
-        ]);
-=======
     $router->post('/besoins/add', function() use($app){
         if(!isset($_POST["ville"]) || !isset($_POST["article"]) || !isset($_POST["quantite"])){
             $_SESSION['error'] = "Tous les champs sont requis";
@@ -130,7 +120,6 @@ $router->group('/', function(Router $router) use ($app) {
         BesoinController::addBesoin($_POST["ville"], $_POST["article"], $_POST["quantite"]);
         $_SESSION['success'] = "Besoin ajouté avec succès";
         $app->redirect('/besoins');
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
     });
 
     $router->get('/*', function() use($app){

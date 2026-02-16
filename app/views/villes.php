@@ -4,10 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Villes - BNGRC</title>
-<<<<<<< HEAD
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-=======
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -35,7 +31,6 @@
             color: var(--text-muted);
         }
     </style>
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
 </head>
 <body>
     <!-- Navigation -->
@@ -81,8 +76,6 @@
     <!-- Main Content -->
     <main class="content-main">
         <div class="content-container">
-<<<<<<< HEAD
-=======
             
             <!-- Statistiques rapides -->
             <div class="stats-mini-grid">
@@ -104,20 +97,13 @@
                 </div>
             </div>
 
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
             <!-- Cities Overview -->
             <div class="list-section">
                 <div class="list-header">
                     <h2>Villes concernées</h2>
                     <div class="list-actions">
-<<<<<<< HEAD
-                        <input type="search" class="search-input" placeholder="Rechercher une ville..." 
-                               onkeyup="filterVilles(this.value)">
-                        <select class="filter-select-small" onchange="sortVilles(this.value)">
-=======
                         <input type="search" class="search-input" id="searchInput" placeholder="Rechercher une ville...">
                         <select class="filter-select-small" id="sortSelect">
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                             <option value="nom">Trier par nom</option>
                             <option value="besoins">Trier par besoins</option>
                             <option value="priorite">Trier par priorité</option>
@@ -125,10 +111,6 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
-                <div class="cities-grid" id="villesGrid" style="margin-top: 2rem;">
-                    <!-- City cards will be dynamically inserted -->
-=======
                 <div class="cities-grid" id="villesGrid">
                     <?php if(empty($villes)): ?>
                         <p style="text-align: center; color: var(--text-muted); padding: 2rem; grid-column: 1/-1;">
@@ -192,14 +174,12 @@
                         </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                 </div>
             </div>
 
             <!-- Detailed Information Panel -->
             <div class="form-card" style="margin-top: 2rem;">
                 <h2 style="margin-bottom: 1.5rem;">Informations sur les villes de Madagascar</h2>
-<<<<<<< HEAD
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
                     <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
                         <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Antananarivo</h3>
@@ -257,7 +237,6 @@
                             Population: ~55,000 habitants.
                         </p>
                     </div>
-=======
                 <div class="cities-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                     <?php foreach($villes as $ville): ?>
                     <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
@@ -270,7 +249,6 @@
                         <small style="color: var(--text-muted);">Région: <?= htmlspecialchars($ville['region_name'] ?? 'N/A') ?></small>
                     </div>
                     <?php endforeach; ?>
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                 </div>
             </div>
         </div>
@@ -287,15 +265,12 @@
                 <div class="footer-links">
                     <div class="link-group">
                         <h4>Navigation</h4>
-<<<<<<< HEAD
                         <a href="index.html">Tableau de bord</a>
                         <a href="besoins.html">Gestion des besoins</a>
                         <a href="dons.html">Gestion des dons</a>
-=======
                         <a href="/">Tableau de bord</a>
                         <a href="/besoins">Gestion des besoins</a>
                         <a href="/dons">Gestion des dons</a>
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                     </div>
                     <div class="link-group">
                         <h4>Ressources</h4>
@@ -311,7 +286,6 @@
         </div>
     </footer>
 
-<<<<<<< HEAD
     <script>
         // Navigation
         const navToggle = document.getElementById('navToggle');
@@ -423,8 +397,6 @@
     </script>
 </body>
 </html>
-=======
     <script src="/assets/js/villes.js"></script>
 </body>
 </html>
->>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
