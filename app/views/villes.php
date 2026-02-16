@@ -181,63 +181,6 @@
             <div class="form-card" style="margin-top: 2rem;">
                 <h2 style="margin-bottom: 1.5rem;">Informations sur les villes de Madagascar</h2>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Antananarivo</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Capitale et plus grande ville de Madagascar. Centre administratif et économique du pays.
-                            Population: ~3 millions d'habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Toamasina</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Principal port de Madagascar sur la côte est. Ville économiquement importante pour le commerce.
-                            Population: ~300,000 habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Antsirabe</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Ville thermale située dans les hautes terres centrales. Connue pour ses sources chaudes.
-                            Population: ~250,000 habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Mahajanga</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Grande ville portuaire sur la côte nord-ouest. Important centre commercial.
-                            Population: ~220,000 habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Fianarantsoa</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Capitale culturelle des hautes terres. Centre universitaire et religieux important.
-                            Population: ~190,000 habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Toliara</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Ville du sud-ouest, porte d'entrée vers les régions arides du sud.
-                            Population: ~160,000 habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Antsiranana</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Port important dans le nord. Base navale et centre touristique.
-                            Population: ~115,000 habitants.
-                        </p>
-                    </div>
-                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
-                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Morondava</h3>
-                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
-                            Ville côtière de l'ouest, célèbre pour l'allée des baobabs.
-                            Population: ~55,000 habitants.
-                        </p>
-                    </div>
-                <div class="cities-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                     <?php foreach($villes as $ville): ?>
                     <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
                         <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">
@@ -265,9 +208,9 @@
                 <div class="footer-links">
                     <div class="link-group">
                         <h4>Navigation</h4>
-                        <a href="index.html">Tableau de bord</a>
-                        <a href="besoins.html">Gestion des besoins</a>
-                        <a href="dons.html">Gestion des dons</a>
+                        <a href="/">Tableau de bord</a>
+                        <a href="/besoins">Gestion des besoins</a>
+                        <a href="/dons">Gestion des dons</a>
                         <a href="/">Tableau de bord</a>
                         <a href="/besoins">Gestion des besoins</a>
                         <a href="/dons">Gestion des dons</a>
