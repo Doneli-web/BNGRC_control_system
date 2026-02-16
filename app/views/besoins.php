@@ -79,7 +79,7 @@ ini_set("display_errors", 1);
                         </div>
                         <div class="form-group">
                             <label for="categorie">Catégorie *</label>
-                            <select id="categorie" required onchange="updateArticleOptions()">
+                            <select id="categorie" required>
                                 <option value="">Sélectionner une catégorie</option>
                                 <?php foreach($typeDon as $td) { ?>
                                     <option value="<?= $td["id"] ?>"><?= $td["name"] ?></option>
@@ -91,11 +91,8 @@ ini_set("display_errors", 1);
                     <div class="form-row">
                         <div class="form-group">
                             <label for="article">Article *</label>
-                            <select id="article" name="article" required onchange="updatePrixUnitaire()">
-                                <option value="">Sélectionner un article</option>
-                                <?php foreach($articles as $a) { ?>
-                                    <option value="<?= $a["id"] ?>"><?= $a["name"] ?></option>
-                                <?php } ?>
+                            <select id="article" name="article" required disabled>
+                                <option value="">Sélectionner une catégorie d'abord</option>
                             </select>
                         </div>
                         <div class="form-group">

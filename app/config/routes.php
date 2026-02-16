@@ -95,6 +95,11 @@ $router->group('/', function(Router $router) use ($app) {
         echo json_encode(["prix_unitaire"=>$article["prix_unitaire"]]);
     });
 
+    $router->get('/api/articles/by-type/@idType', function($idType) use ($app){
+        $articles = ArticleController::findByType($idType);
+        Flight::json($articles);
+    });
+
        $router->get('/dons', function() use($app){
         DonController::showDonsPage($app);
     });
