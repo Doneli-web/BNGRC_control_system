@@ -17,14 +17,39 @@ class VilleModel{
         $stmt->execute([$name]);
     }
 
-    public function findAll(){
-        $stmt = $this->db->prepare("SELECT * FROM BNGRC_ville");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+   public function findAll() {
+        $stmt = $this->db->query("
+            SELECT v.*, r.name as region_name 
+            FROM BNGRC_ville v
+            LEFT JOIN BNGRC_region r ON v.idRegion = r.id
+            ORDER BY v.name
+        ");
+        $villes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Ajouter le nombre de besoins pour chaque ville
+        foreach($villes as $key => $ville) {
+            $stmt2 = $this->db->prepare("SELECT COUNT(*) as total FROM BNGRC_besoin WHERE idVille = ?");
+            $stmt2->execute([$ville['id']]);
+            $total = $stmt2->fetch(PDO::FETCH_ASSOC);
+            $villes[$key]['total_besoins'] = $total['total'];
+            
+            // Calculer le montant total des besoins
+            $stmt3 = $this->db->prepare("
+                SELECT COALESCE(SUM(b.quantite * a.prix_unitaire), 0) as montant
+                FROM BNGRC_besoin b
+                JOIN BNGRC_article a ON b.idArticle = a.id
+                WHERE b.idVille = ?
+            ");
+            $stmt3->execute([$ville['id']]);
+            $montant = $stmt3->fetch(PDO::FETCH_ASSOC);
+            $villes[$key]['montant_total'] = $montant['montant'];
+        }
+        
+        return $villes;
     }
 
     public function findById($id){
-        $stmt = $this->db->prepare("SELECT id, name FROM BNGRC_ville WHERE id=:id");
+        $stmt = $this->db->prepare(" SELECT v.*, r.name as region_name FROM BNGRC_ville v LEFT JOIN BNGRC_region r ON v.idRegion = r.id WHERE v.id = :id");
         $stmt->execute([
             ":id"=>$id
         ]);
