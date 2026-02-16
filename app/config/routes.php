@@ -6,6 +6,8 @@ use app\controllers\DonController;
 use app\controllers\TypeDonController;
 use app\controllers\ArticleController;
 use app\controllers\BesoinController;
+use app\controllers\AchatController;
+use app\controllers\ConfigController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -140,6 +142,96 @@ $router->group('/', function(Router $router) use ($app) {
         BesoinController::addBesoin($_POST["ville"], $_POST["article"], $_POST["quantite"]);
         $_SESSION['success'] = "Besoin ajouté avec succès";
         $app->redirect('/besoins');
+    });
+
+
+    $router->get('/achats', function() use($app){
+        AchatController::showAchatsPage($app);
+    });
+
+    $router->post('/achats/frais/update', function() use($app){
+        ConfigController::updateFraisAchat();
+        $_SESSION['success'] = "Frais mis à jour avec succès";
+        Flight::redirect('/achats');
+    });
+
+    $router->post('/achats/calculer', function() {
+        $idDon = $_POST["idDon"] ?? null;
+        $idBesoin = $_POST["idBesoin"] ?? null;
+        $montant = $_POST["montant"] ?? null;
+        
+        if(!$idDon || !$idBesoin || !$montant){
+            echo json_encode(["success" => false, "message" => "Paramètres manquants"]);
+            return;
+        }
+        
+        $resultat = AchatController::calculerAchat($idDon, $idBesoin, $montant);
+    
+        if($resultat){
+            echo json_encode(["success" => true, "data" => $resultat]);
+        }else{
+            echo json_encode(["success" => false, "message" => "Calcul impossible"]);
+        }
+    });
+
+    $router->post('/achats/effectuer', function() use($app) {
+        $idDon = $_POST["idDon"] ?? null;
+        $idBesoin = $_POST["idBesoin"] ?? null;
+        $montant_utilise = $_POST["montant_utilise"] ?? null;
+        $frais_pourcentage = $_POST["frais_pourcentage"] ?? null;
+        $frais_montant = $_POST["frais_montant"] ?? null;
+        $montant_total = $_POST["montant_total"] ?? null;
+        
+        error_log("Tentative achat: don=" . $idDon . ", besoin=" . $idBesoin . ", montant=" . $montant_utilise);
+        
+        if(!$idDon || !$idBesoin || !$montant_utilise){
+            $_SESSION['error'] = "Paramètres manquants";
+            Flight::redirect('/achats');
+            return;
+        }
+        
+        $resultat = AchatController::validerAchat($idDon, $idBesoin, $montant_utilise, $frais_pourcentage, $frais_montant, $montant_total);
+        
+        if($resultat){
+            $_SESSION['success'] = "Achat effectué avec succès";
+            error_log("Achat réussi");
+        } else {
+            $_SESSION['error'] = "Erreur lors de l'achat";
+            error_log("Achat échoué");
+        }
+        
+        Flight::redirect('/achats');
+    });
+
+    $router->get('/achats/delete/@id', function($id) use($app){
+        AchatController::deleteAchat($id);
+        $_SESSION['success'] = "Achat supprimé avec succès";
+        Flight::redirect('/achats');
+    });
+
+    $router->get('/achats/ville/@id', function($id) use($app){
+        
+        $app->render('achats', [
+            "ville_id" => $id
+        ]);
+    });
+
+    $router->get('/config/frais', function() {
+        $frais = ConfigController::getFraisAchat();
+        echo json_encode(["success" => true, "data" => $frais]);
+    });
+
+    $router->post('/config/frais/update', function() use($app) {
+        $frais = $_POST["frais"] ?? null;
+        
+        if($frais && is_numeric($frais) && $frais >= 0 && $frais <= 100) {
+            ConfigController::updateFraisAchat($frais);
+            $_SESSION['success'] = "Frais mis à jour avec succès";
+        } else {
+            $_SESSION['error'] = "Frais invalide";
+        }
+        
+        Flight::redirect('/achats');
     });
 
     $router->get('/*', function() use($app){
