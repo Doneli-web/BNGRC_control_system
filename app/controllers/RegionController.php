@@ -7,13 +7,13 @@ use flight\Engine;
 use Flight;
 
 class RegionController{
-    public static function getAll(){
+    public static function getRegions(){
         $RegionModel = new RegionModel(Flight::db());
         $regions = $RegionModel->findAll();
         return $regions;
     }
 
-    public static function getById($id){
+    public static function getRegionById($id){
         $RegionModel = new RegionModel(Flight::db());
         $region = $RegionModel->findById($id);
         return $region;

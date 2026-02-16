@@ -30,5 +30,11 @@ class VilleModel{
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    public function findVilleStatistics(){
+        $stmt = $this->db->prepare("SELECT BNGRC_ville.name AS ville_name, COUNT(BNGRC_besoin.id) AS total_besoins FROM BNGRC_ville LEFT JOIN BNGRC_besoin ON BNGRC_ville.id = BNGRC_besoin.idVille GROUP BY BNGRC_ville.id");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
