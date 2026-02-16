@@ -264,14 +264,16 @@ Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
     - FOREIGN KEY (idArticle) REFERENCES BNGRC_article(id)
     
 [ ] INSERT données de test (2 min)
+
+
 ```
 
 **Configuration Flight PHP** (8 min)
 ```php
 [ ] Fichier index.php - initialisation Flight - 2 min
-[ ] Fichier config/database.php - connexion MySQL - 3 min
+[ ] Fichier config/database.php - connexion MySQL - 3 min (ok)
 [ ] Inclusion des routes et models - 2 min
-[ ] Test connexion - 1 min
+[ ] Test connexion - 1 min (ok)
 ```
 
 #### ⏱️ 15-35 min : MODEL (20 min)
@@ -280,14 +282,14 @@ Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
 **Fichier : `models/DonModel.php`** (20 min)
 ```php
 [ ] class DonModel - 1 min
-[ ] __construct($db) - 1 min
-[ ] findAll() - SELECT * FROM BNGRC_don - 2 min
-[ ] findById($id) - SELECT avec WHERE - 2 min
-[ ] addDon($idArticle, $quantite, $donateur, $type) - INSERT - 3 min
-[ ] findAllWithDetails() - SELECT avec JOIN (don + article + type) - 5 min
-[ ] getDonsByStatut($statut) - SELECT avec WHERE - 2 min
-[ ] updateStatut($id, $statut) - UPDATE - 2 min
-[ ] getStatistiques() - COUNT, SUM par statut - 3 min
+[ ] __construct($db) - 1 min (OK)
+[ ] getAll() - SELECT * FROM BNGRC_don - 2 min (OK)
+[ ] getById($id) - SELECT avec WHERE - 2 min (OK)
+[ ] addDon($idArticle, $quantite, $donateur, $type) - INSERT - 3 min (OK)
+[ ] findAllWithDetails() - SELECT avec JOIN (don + article + type) - 5 min (OK)
+[ ] getDonsByStatut($statut) - SELECT avec WHERE - 2 min (OK)
+[ ] updateStatut($id, $statut) - UPDATE - 2 min (OK)
+[ ] getStatistiques() - COUNT, SUM par statut - 3 min (OK)
 [ ] Tests - 2 min
 ```
 
@@ -297,7 +299,7 @@ Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
 **Fichier : `controllers/DonController.php`** (15 min)
 ```php
 [ ] class DonController - 1 min
-[ ] __construct($donModel, $articleModel) - 1 min
+[ ] __construct($donModel, $articleModel) - 1 min (OK)
 
 [ ] GET /api/dons - getDons() - 2 min
 [ ] GET /api/dons/:id - getDonById($id) - 2 min

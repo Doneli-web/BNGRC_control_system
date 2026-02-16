@@ -21,19 +21,11 @@
                 <span class="brand-text">BNGRC<span class="brand-sub">Gestion des Dons</span></span>
             </div>
             <ul class="nav-menu">
-<<<<<<< HEAD
-                <li><a href="index.html" class="active">Tableau de bord</a></li>
-                <li><a href="besoins.html">Besoins</a></li>
-                <li><a href="/dons">Dons</a></li>
-                <li><a href="villes.html">Villes</a></li>
-                <li><a href="simulation.html">Simulation</a></li>
-=======
                 <li><a href="/" class="active">Tableau de bord</a></li>
                 <li><a href="/besoins">Besoins</a></li>
                 <li><a href="/dons">Dons</a></li>
                 <li><a href="/villes">Villes</a></li>
                 <li><a href="/simulation">Simulation</a></li>
->>>>>>> d633688400c35e9da9cd558aa37cf9041a342228
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span>
@@ -230,7 +222,7 @@
                         <h4>Navigation</h4>
                         <a href="index.html">Tableau de bord</a>
                         <a href="besoins.html">Gestion des besoins</a>
-                        <a href="/dons">Gestion des dons</a>
+                        <a href="dons.html">Gestion des dons</a>
                     </div>
                     <div class="link-group">
                         <h4>Ressources</h4>
