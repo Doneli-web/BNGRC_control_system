@@ -3,57 +3,64 @@
 // ===================================
 
 // Sample data for cities
-const citiesData = [
-    {
-        name: "Antananarivo",
-        besoins: [
-            { categorie: "nature", article: "Riz", quantite: 500, unite: "kg", prixUnitaire: 5000, attribue: 350 },
-            { categorie: "nature", article: "Huile", quantite: 200, unite: "L", prixUnitaire: 12000, attribue: 120 },
-            { categorie: "materiel", article: "Tôles", quantite: 100, unite: "unités", prixUnitaire: 25000, attribue: 100 }
-        ],
-        status: "urgent"
-    },
-    {
-        name: "Toamasina",
-        besoins: [
-            { categorie: "nature", article: "Riz", quantite: 800, unite: "kg", prixUnitaire: 5000, attribue: 600 },
-            { categorie: "materiel", article: "Bâches", quantite: 50, unite: "m²", prixUnitaire: 8000, attribue: 30 }
-        ],
-        status: "warning"
-    },
-    {
-        name: "Antsirabe",
-        besoins: [
-            { categorie: "nature", article: "Eau potable", quantite: 1000, unite: "L", prixUnitaire: 2000, attribue: 1000 },
-            { categorie: "argent", article: "Don financier", quantite: 1, unite: "", prixUnitaire: 2000000, attribue: 2000000 }
-        ],
-        status: "good"
-    },
-    {
-        name: "Mahajanga",
-        besoins: [
-            { categorie: "nature", article: "Riz", quantite: 300, unite: "kg", prixUnitaire: 5000, attribue: 100 },
-            { categorie: "materiel", article: "Clous", quantite: 20, unite: "kg", prixUnitaire: 15000, attribue: 15 }
-        ],
-        status: "urgent"
-    },
-    {
-        name: "Fianarantsoa",
-        besoins: [
-            { categorie: "nature", article: "Huile", quantite: 150, unite: "L", prixUnitaire: 12000, attribue: 100 },
-            { categorie: "materiel", article: "Tôles", quantite: 80, unite: "unités", prixUnitaire: 25000, attribue: 60 }
-        ],
-        status: "warning"
-    },
-    {
-        name: "Toliara",
-        besoins: [
-            { categorie: "nature", article: "Riz", quantite: 600, unite: "kg", prixUnitaire: 5000, attribue: 200 },
-            { categorie: "argent", article: "Don financier", quantite: 1, unite: "", prixUnitaire: 3000000, attribue: 1500000 }
-        ],
-        status: "urgent"
+let citiesData = [];
+
+document.addEventListener('DOMContentLoaded', async function() {
+    initNavigation();
+    await loadDashboardData(); // ⚡ important
+    renderCities();
+    updateStats();
+    initFilters();
+});
+
+async function loadDashboardData() {
+    try {
+        const response = await fetch('/dashboard');
+        const data = await response.json();
+
+        citiesData = transformData(data);
+
+    } catch (error) {
+        console.error("Erreur chargement dashboard:", error);
     }
-];
+}
+
+function transformData(rows) {
+    const villes = {};
+
+    rows.forEach(row => {
+        if (!row.ville) return;
+
+        if (!villes[row.ville]) {
+            villes[row.ville] = {
+                name: row.ville,
+                besoins: [],
+                status: "good"
+            };
+        }
+
+        villes[row.ville].besoins.push({
+            categorie: detectCategory(row.article),
+            article: row.article,
+            quantite: Number(row.quantite || 0),
+            unite: "",
+            prixUnitaire: Number(row.prix_unitaire || 0),
+            attribue: Number(row.attribue || 0)
+        });
+    });
+
+    return Object.values(villes);
+}
+
+function detectCategory(article) {
+    const nature = ['Riz', 'Huile', 'Eau'];
+    const materiel = ['Tôle', 'Clou', 'Bois'];
+
+    if (nature.includes(article)) return 'nature';
+    if (materiel.includes(article)) return 'materiel';
+    return 'argent';
+}
+
 
 // Initialize dashboard
 document.addEventListener('DOMContentLoaded', function() {

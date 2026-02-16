@@ -18,7 +18,7 @@ class VilleModel{
     }
 
     public function findAll(){
-        $stmt = $this->db->prepare("SELECT * name FROM BNGRC_ville");
+        $stmt = $this->db->prepare("SELECT * FROM BNGRC_ville");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -36,5 +36,28 @@ class VilleModel{
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getDashboardData(){
+        $sql = "
+        SELECT 
+            v.id AS ville_id,
+            v.name AS ville,
+            a.name AS article,
+            a.prix_unitaire,
+            SUM(b.quantite) AS quantite,
+            COALESCE(SUM(disp.quantite_attribuee), 0) AS attribue
+        FROM BNGRC_ville v
+        LEFT JOIN BNGRC_besoin b ON b.idVille = v.id
+        LEFT JOIN BNGRC_article a ON a.id = b.idArticle
+        LEFT JOIN BNGRC_dispatch disp ON disp.idBesoin = b.id
+        GROUP BY v.id, a.id
+        ORDER BY v.name
+        ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 

@@ -2,7 +2,7 @@
 
 use app\controllers\VilleController;
 use app\controllers\RegionController;
-use app\controllers\DonController;
+use app\controllers\TypeDonController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -34,22 +34,13 @@ $router->group('/', function(Router $router) use ($app) {
         ]);
     });
 
-    $router->get('/dons', function() use($app){
-        DonController::showDonsPage($app);
+    $router->get('/besoins', function() use($app){
+        $typeDon = TypeDonController::findAll();
+        $app->render('besoins', [
+            "typeDon" => $typeDon
+        ]);
     });
 
-   
-
-    $router->post('/dons/add', function() use($app){
-        DonController::addDonFromForm();
-    });
-
-    $router->get('/dons/delete/@id', function($id) use($app){
-        DonController::deleteDon($id);
-        $_SESSION['success'] = "Don supprimé avec succès";
-        Flight::redirect('/dons');
-    });
-    
     $router->get('/*', function() use($app){
         $app->render('404', []);
     });
