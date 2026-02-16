@@ -48,3 +48,15 @@ CREATE TABLE BNGRC_besoin (
         REFERENCES BNGRC_article(id)
 );
 
+INSERT INTO BNGRC_typeDon(name) VALUES
+('Nature'),
+('Matériaux'),
+('Argent');
+
+INSERT INTO BNGRC_article(name, idType, prix_unitaire) VALUES
+('Riz', 1, 3000),
+('Huile', 1, 5000),
+('Tôle', 2, 20000),
+('Clou', 2, 100),
+('Argent', 3, 1);
+
