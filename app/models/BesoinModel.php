@@ -12,9 +12,9 @@ class BesoinModel{
         $this->db = $db;
     }
 
-    public function addBesoin($idVille, $idArticle, $quantite, $date_de_saisie){
-        $stmt = $this->db->prepare("INSERT INTO BNGRC_besoin(idVille, idArticle, quantite, date_de_saisie) VALUES(?, ?, ?, ?)");
-        $stmt->execute([$idVille, $idArticle, $quantite, $date_de_saisie]);
+    public function addBesoin($idVille, $idArticle, $quantite){
+        $stmt = $this->db->prepare("INSERT INTO BNGRC_besoin(idVille, idArticle, quantite) VALUES(?, ?, ?)");
+        $stmt->execute([$idVille, $idArticle, $quantite]);
     }
 
     public function findAll(){
