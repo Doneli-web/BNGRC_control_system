@@ -40,18 +40,18 @@ Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
 
 ```sql
 -- À créer dans l'ordre :
-[ ] Créer DATABASE BNGRC (2 min)
-[ ] Table BNGRC_region (5 min)
+[OK] Créer DATABASE BNGRC (2 min)
+[OK] Table BNGRC_region (5 min)
     - id INT PRIMARY KEY AUTO_INCREMENT
     - name VARCHAR(100) NOT NULL
     
-[ ] Table BNGRC_ville (5 min)
+[OK] Table BNGRC_ville (5 min)
     - id INT PRIMARY KEY AUTO_INCREMENT
     - name VARCHAR(100) NOT NULL
     - idRegion INT NOT NULL
     - FOREIGN KEY (idRegion) REFERENCES BNGRC_region(id)
     
-[ ] INSERT données initiales (3 min)
+[OK] INSERT données initiales (3 min)
     - Régions : Analamanga, Atsinanana, Vakinankaratra
     - Villes : Antananarivo, Toamasina, Antsirabe, Mahajanga
 ```
@@ -61,23 +61,23 @@ Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
 
 **Fichier : `models/RegionModel.php`** (10 min)
 ```php
-[ ] class RegionModel
-[ ] __construct($db) - 1 min
-[ ] findAll() - SELECT * FROM BNGRC_region - 3 min
-[ ] findById($id) - SELECT avec WHERE - 2 min
-[ ] addRegion($name) - INSERT - 2 min
-[ ] Tests de base - 2 min
+[OK] class RegionModel
+[OK] __construct($db) - 1 min
+[OK] findAll() - SELECT * FROM BNGRC_region - 3 min
+[OK] findById($id) - SELECT avec WHERE - 2 min
+[OK] addRegion($name) - INSERT - 2 min
+[OK] Tests de base - 2 min
 ```
 
 **Fichier : `models/VilleModel.php`** (15 min)
 ```php
-[ ] class VilleModel
-[ ] __construct($db) - 1 min
-[ ] findAll() - SELECT * FROM BNGRC_ville - 2 min
-[ ] findById($id) - SELECT avec WHERE - 2 min
-[ ] addVille($name, $idRegion) - INSERT - 2 min
-[ ] findVilleWithRegion() - SELECT avec JOIN - 5 min
-[ ] getVilleStats() - COUNT besoins/dons par ville - 3 min
+[OK] class VilleModel
+[OK] __construct($db) - 1 min
+[OK] findAll() - SELECT * FROM BNGRC_ville - 2 min
+[OK] findById($id) - SELECT avec WHERE - 2 min
+[OK] addVille($name, $idRegion) - INSERT - 2 min
+[OK] findVilleWithRegion() - SELECT avec JOIN - 5 min
+[OK] getVilleStats() - COUNT besoins/dons par ville - 3 min
 ```
 
 #### ⏱️ 40-55 min : CONTROLLERS & ROUTES (15 min)
@@ -85,17 +85,17 @@ Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
 
 **Fichier : `controllers/VilleController.php`** (15 min)
 ```php
-[ ] class VilleController - 1 min
-[ ] __construct($villeModel, $regionModel) - 1 min
+[OK] class VilleController - 1 min
+[OK] __construct() - 1 min
 
-[ ] GET /api/regions - getRegions() - 2 min
-[ ] GET /api/regions/:id - getRegionById($id) - 2 min
-[ ] POST /api/regions - addRegion() - 2 min
+[OK] GET /api/regions - getRegions() - 2 min
+[OK] GET /api/regions/:id - getRegionById($id) - 2 min
+[OK] POST /api/regions - addRegion() - 2 min
 
-[ ] GET /api/villes - getVilles() - 2 min
-[ ] GET /api/villes/:id - getVilleById($id) - 2 min
-[ ] POST /api/villes - addVille() - 2 min
-[ ] GET /api/villes/stats - getVilleStats() - 3 min
+[OK] GET /api/villes - getVilles() - 2 min
+[OK] GET /api/villes/:id - getVilleById($id) - 2 min
+[OK] POST /api/villes - addVille() - 2 min
+[OK] GET /api/villes/stats - getVilleStats() - 3 min
 ```
 
 **Fichier : `routes.php`** (inclus ci-dessus)

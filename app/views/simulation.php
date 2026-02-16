@@ -160,9 +160,9 @@
             <ul class="nav-menu">
                 <li><a href="index.html">Tableau de bord</a></li>
                 <li><a href="besoins.html">Besoins</a></li>
-                <li><a href="dons.html">Dons</a></li>
-                <li><a href="villes.html">Villes</a></li>
-                <li><a href="simulation.html" class="active">Simulation</a></li>
+                <li><a href="/dons">Dons</a></li>
+                <li><a href="/villes">Villes</a></li>
+                <li><a href="/simulation" class="active">Simulation</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span>

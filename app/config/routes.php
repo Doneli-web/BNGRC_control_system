@@ -78,6 +78,16 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::redirect('/dons');
     });
 
+    $router->get('/simulation', function() use($app){
+        $app->render('simulation', [
+        ]);
+    });
+
+    $router->get('/villes', function() use($app){
+        $app->render('villes', [
+        ]);
+    });
+
     $router->get('/*', function() use($app){
         $app->render('404', []);
     });

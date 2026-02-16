@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Villes - BNGRC</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -21,11 +21,11 @@
                 <span class="brand-text">BNGRC<span class="brand-sub">Gestion des Dons</span></span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html">Tableau de bord</a></li>
-                <li><a href="besoins.html">Besoins</a></li>
-                <li><a href="dons.html">Dons</a></li>
-                <li><a href="villes.html" class="active">Villes</a></li>
-                <li><a href="simulation.html">Simulation</a></li>
+                <li><a href="/">Tableau de bord</a></li>
+                <li><a href="/besoins">Besoins</a></li>
+                <li><a href="/dons">Dons</a></li>
+                <li><a href="/villes" class="active">Villes</a></li>
+                <li><a href="/simulation">Simulation</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span>
@@ -39,7 +39,7 @@
     <section class="page-header">
         <div class="page-header-content">
             <div class="breadcrumb">
-                <a href="index.html">Accueil</a>
+                <a href="/">Accueil</a>
                 <span>/</span>
                 <span>Gestion des villes</span>
             </div>

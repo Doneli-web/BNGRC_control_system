@@ -21,19 +21,11 @@
                 <span class="brand-text">BNGRC<span class="brand-sub">Gestion des Dons</span></span>
             </div>
             <ul class="nav-menu">
-<<<<<<< HEAD
-                <li><a href="index.html" class="active">Tableau de bord</a></li>
-                <li><a href="besoins.html">Besoins</a></li>
-                <li><a href="/dons">Dons</a></li>
-                <li><a href="villes.html">Villes</a></li>
-                <li><a href="simulation.html">Simulation</a></li>
-=======
                 <li><a href="/" class="active">Tableau de bord</a></li>
                 <li><a href="/besoins">Besoins</a></li>
                 <li><a href="/dons">Dons</a></li>
                 <li><a href="/villes">Villes</a></li>
                 <li><a href="/simulation">Simulation</a></li>
->>>>>>> d633688400c35e9da9cd558aa37cf9041a342228
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span>
@@ -95,7 +87,7 @@
                         </svg>
                         Exporter
                     </button>
-                    <button class="btn-primary" onclick="window.location.href='simulation.html'">
+                    <button class="btn-primary" onclick="window.location.href='/simulation'">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <polygon points="5 3 19 12 5 21 5 3"/>
                         </svg>

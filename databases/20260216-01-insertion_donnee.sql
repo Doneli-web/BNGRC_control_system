@@ -1,20 +1,7 @@
 INSERT INTO BNGRC_region (name) VALUES
 ('Analamanga'),
 ('Atsinanana'),
-('Vakinankaratra'),
-('Itasy'),
-('Bongolava'),
-('Alaotra-Mangoro'),
-('Sava'),
-('Diana'),
-('Sofia'),
-('Boeny'),
-('Melaky'),
-('Menabe'),
-('Atsimo-Andrefana'),
-('Androy'),
-('Anosy'),
-('Atsimo-Atsinanana');
+('Vakinankaratra');
 
 INSERT INTO BNGRC_ville (name, idRegion) VALUES
 ('Antananarivo', 1),
@@ -22,31 +9,7 @@ INSERT INTO BNGRC_ville (name, idRegion) VALUES
 ('Toamasina', 2),
 ('Brickaville', 2),
 ('Antsirabe', 3),
-('Betafo', 3),
-('Miarinarivo', 4),
-('Arivonimamo', 4),
-('Tsiroanomandidy', 5),
-('Bongolava Ville', 5),
-('Ambatondrazaka', 6),
-('Moramanga', 6),
-('Sambava', 7),
-('Andapa', 7),
-('Antsiranana', 8),
-('Ambilobe', 8),
-('Antsohihy', 9),
-('Befandriana-Nord', 9),
-('Mahajanga', 10),
-('Boeny Ville', 10),
-('Maintirano', 11),
-('Melaky Ville', 11),
-('Morondava', 12),
-('Manja', 12),
-('Toliara', 13),
-('Ampanihy', 13),
-('Ambovombe-Androy', 14),
-('Androy Ville', 14),
-('Tolagnaro', 15),
-('Atsimo-Atsinanana Ville', 15);
+('Betafo', 3);
 
 INSERT INTO BNGRC_besoin (idVille, idArticle, quantite, date_de_saisie) VALUES
 
@@ -91,3 +54,71 @@ CREATE TABLE BNGRC_dispatch (
         FOREIGN KEY (idBesoin)
         REFERENCES BNGRC_besoin(id)
 );
+
+-- 🏙️ Antananarivo
+-- Besoin Riz 500
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(1, 1, 500);  -- Don 1 (500 Riz) couvre le besoin
+
+-- Besoin Huile 200
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(6, 2, 200);  -- Don 6 (300 L Huile), reste 100 L dans le don
+
+-- Besoin Tôle 60
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(10, 3, 60); -- Don 10 (200 Tôle), reste 140 Tôle
+
+-- 🏘️ Ambohidratrimo
+-- Besoin Riz 300
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(2, 4, 300);  -- Don 2 (1000 Riz), reste 700
+
+-- Besoin Clous 800
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(11, 5, 800); -- Don 11 (1000 Clous), reste 200
+
+-- 🌊 Toamasina
+-- Besoin Riz 700
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(2, 6, 700);  -- Don 2 (reste 700 Riz), couvert
+
+-- Besoin Tôle 120
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(10, 7, 120); -- Don 10 (reste 140 Tôle), reste 20
+
+-- Besoin Argent 200000
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(15, 8, 200000); -- Don 15 (2,000,000 Ar), reste 1,800,000
+
+-- 🌴 Brickaville
+-- Besoin Huile 250
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(6, 9, 100),  -- Don 6 (reste 100 L)
+(7, 9, 150);  -- Don 7 (reste 500 L), besoin couvert
+
+-- Besoin Clous 1500
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(11, 10, 200), -- Don 11 (reste 200)
+(12, 10, 1300); -- Don 12 (reste 700)
+
+-- 🌄 Antsirabe
+-- Besoin Riz 600
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(2, 11, 0),    -- Don 2 épuisé
+(3, 11, 600);  -- Don 3 (750 Riz), reste 150
+
+-- Besoin Tôle 90
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(10, 12, 20),  -- Don 10 (reste 20 Tôle)
+(12, 12, 70);  -- Don 12 (reste 630)
+
+-- 🏞️ Betafo
+-- Besoin Riz 350
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(3, 13, 150),  -- Don 3 (reste 150)
+(4, 13, 200);  -- Don 4 (reste 1800)
+
+-- Besoin Argent 100000
+INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee) VALUES
+(15, 14, 100000); -- Don 15 (reste 1,700,000)
+
