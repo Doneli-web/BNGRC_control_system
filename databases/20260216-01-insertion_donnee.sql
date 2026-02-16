@@ -75,3 +75,19 @@ INSERT INTO BNGRC_besoin (idVille, idArticle, quantite, date_de_saisie) VALUES
 -- 🏞️ Betafo
 (6, 1, 350, '2026-02-14 09:00:00'),
 (6, 5, 100000, '2026-02-14 09:15:00');
+
+CREATE TABLE BNGRC_dispatch (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idDon INT NOT NULL,
+    idBesoin INT NOT NULL,
+    quantite_attribuee INT NOT NULL,
+    date_dispatch DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_dispatch_don
+        FOREIGN KEY (idDon)
+        REFERENCES BNGRC_don(id),
+
+    CONSTRAINT fk_dispatch_besoin
+        FOREIGN KEY (idBesoin)
+        REFERENCES BNGRC_besoin(id)
+);
