@@ -19,7 +19,7 @@ $router->group('', function(Router $router) use ($app) {
 
     // $router->get('/', [ UserController::class, 'getTrajets' ]);
     $router->get('/', function() use($app){
-        $app->render('admin', []);
+        $app->render('index', []);
     });
 
     $router->post('/admin-verification', function() use($app){
@@ -201,6 +201,7 @@ $router->group('', function(Router $router) use ($app) {
         $app->render('404', []);
     });
 
+   
     // $router->post('/register', function() use($app){
     //     $username = $_POST["username"];
     //     $server_response = UserController::addUser($username);
