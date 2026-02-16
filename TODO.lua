@@ -37,6 +37,7 @@ TODO LIST (BNGRC):
                 - findAll()
                 - findById(id)
                 - findAllBesoinInfo()
+                - deleteBesoin(id)
             - donModel :
                 - addDon(idArticle, quantite, date_de_saisie)
                 - findAll()
