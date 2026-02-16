@@ -41,10 +41,12 @@ $router->group('/', function(Router $router) use ($app) {
         $typeDon = TypeDonController::findAll();
         $articles = ArticleController::findAll();
         $villes = VilleController::getVilles();
+        $besoins = BesoinController::findAllBesoinInfo();
         $app->render('besoins', [
             "typeDon" => $typeDon,
             "articles" => $articles,
-            "villes" => $villes
+            "villes" => $villes,
+            "besoins" => $besoins
         ]);
     });
 

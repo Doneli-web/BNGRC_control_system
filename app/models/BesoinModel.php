@@ -32,7 +32,7 @@ class BesoinModel{
     }
 
     public function findAllBesoinInfo(){
-        $stmt = $this->db->prepare("SELECT BNGRC_besoin.id, BNGRC_ville.name AS ville_name, BNGRC_article.name AS article_name, BNGRC_besoin.quantite, BNGRC_besoin.date_de_saisie FROM BNGRC_besoin JOIN BNGRC_ville ON BNGRC_besoin.idVille = BNGRC_ville.id JOIN BNGRC_article ON BNGRC_besoin.idArticle = BNGRC_article.id");
+        $stmt = $this->db->prepare("SELECT BNGRC_besoin.id, BNGRC_ville.name AS ville_name, BNGRC_typeDon.name AS type_name, BNGRC_article.name AS article_name, BNGRC_article.prix_unitaire, BNGRC_besoin.quantite, BNGRC_besoin.date_de_saisie FROM BNGRC_besoin JOIN BNGRC_ville ON BNGRC_besoin.idVille = BNGRC_ville.id JOIN BNGRC_article ON BNGRC_besoin.idArticle = BNGRC_article.id JOIN BNGRC_typeDon ON BNGRC_article.idType = BNGRC_typeDon.id");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
