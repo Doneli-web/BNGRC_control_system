@@ -5,6 +5,7 @@ use app\controllers\RegionController;
 use app\controllers\DonController;
 use app\controllers\TypeDonController;
 use app\controllers\ArticleController;
+use app\controllers\BesoinController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -39,9 +40,11 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/besoins', function() use($app){
         $typeDon = TypeDonController::findAll();
         $articles = ArticleController::findAll();
+        $villes = VilleController::getVilles();
         $app->render('besoins', [
             "typeDon" => $typeDon,
-            "articles" => $articles
+            "articles" => $articles,
+            "villes" => $villes
         ]);
     });
 
@@ -78,6 +81,17 @@ $router->group('/', function(Router $router) use ($app) {
         DonController::deleteDon($id);
         $_SESSION['success'] = "Don supprimé avec succès";
         Flight::redirect('/dons');
+    });
+
+    $router->post('/besoins/add', function() use($app){
+        if(!isset($_POST["ville"]) || !isset($_POST["article"]) || !isset($_POST["quantite"])){
+            $_SESSION['error'] = "Tous les champs sont requis";
+            $app->redirect('/besoins');
+            return;
+        }
+        BesoinController::addBesoin($_POST["ville"], $_POST["article"], $_POST["quantite"]);
+        $_SESSION['success'] = "Besoin ajouté avec succès";
+        $app->redirect('/besoins');
     });
 
     $router->get('/*', function() use($app){
