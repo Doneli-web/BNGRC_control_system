@@ -9,6 +9,7 @@ ini_set("display_errors", 1);
     <title>Gestion des Besoins - BNGRC</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="/assets/js/besoins.js" defer></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -97,12 +98,15 @@ ini_set("display_errors", 1);
                             <label for="article">Article *</label>
                             <select id="article" required onchange="updatePrixUnitaire()">
                                 <option value="">Sélectionner un article</option>
+                                <?php foreach($articles as $a) { ?>
+                                    <option value="<?= $a["id"] ?>"><?= $a["name"] ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="quantite">Quantité *</label>
-                            <input type="number" id="quantite" min="1" step="1" required 
-                                   placeholder="Ex: 100" onchange="calculateTotal()">
+                            <input type="number" id="quantite" min="1" step="1" value="1" required 
+                                   placeholder="Ex: 100">
                         </div>
                     </div>
 
@@ -279,7 +283,5 @@ ini_set("display_errors", 1);
             </div>
         </div>
     </footer>
-
-    <script src="besoins.js"></script>
 </body>
 </html>

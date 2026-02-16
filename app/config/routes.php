@@ -3,6 +3,7 @@
 use app\controllers\VilleController;
 use app\controllers\RegionController;
 use app\controllers\TypeDonController;
+use app\controllers\ArticleController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -36,8 +37,10 @@ $router->group('/', function(Router $router) use ($app) {
 
     $router->get('/besoins', function() use($app){
         $typeDon = TypeDonController::findAll();
+        $articles = ArticleController::findAll();
         $app->render('besoins', [
-            "typeDon" => $typeDon
+            "typeDon" => $typeDon,
+            "articles" => $articles
         ]);
     });
 
@@ -52,6 +55,11 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($data);
     });
 
+
+    $router->get('/api/article/@id', function($id) use ($app){
+        $article = ArticleController::findById($id);
+        echo json_encode(["prix_unitaire"=>$article["prix_unitaire"]]);
+    });
 
     $router->get('/*', function() use($app){
         $app->render('404', []);
