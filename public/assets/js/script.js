@@ -155,8 +155,9 @@ function calculateTotalAttribue(besoins) {
 
 // Update statistics
 function updateStats() {
-    const totalVilles = citiesData.length;
-    const totalDons = 847; // From sample data
+    const totalVillesElement = document.getElementById('totalVilles');
+    const totalVilles = citiesData.length > 0 ? citiesData.length : (parseInt(totalVillesElement.textContent) || 0);
+    const totalDons = document.getElementById("totalDons").textContent;
     
     let totalBesoinsGlobal = 0;
     let totalAttribueGlobal = 0;
@@ -170,9 +171,8 @@ function updateStats() {
         ? Math.round((totalAttribueGlobal / totalBesoinsGlobal) * 100) 
         : 0;
     
-    // Update stat cards with animation
     animateValue('totalVilles', 0, totalVilles, 1000);
-    animateValue('totalDons', 0, totalDons, 1500);
+    animateValue('totalDons', parseInt(totalDons) || 0, parseInt(totalDons) || 0, 500);
     animateValue('tauxAttribution', 0, tauxAttribution, 2000, '%');
 }
 

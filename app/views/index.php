@@ -45,12 +45,12 @@
         <div class="hero-stats">
             <div class="stat-card">
                 <div class="stat-icon">📍</div>
-                <div class="stat-value" id="totalVilles">12</div>
+                <div class="stat-value" id="totalVilles"><?= $total_villes ?></div>
                 <div class="stat-label">Villes concernées</div>
             </div>
             <div class="stat-card">
                 <div class="stat-icon">📦</div>
-                <div class="stat-value" id="totalDons">847</div>
+                <div class="stat-value" id="totalDons"><?= $total_dons ?></div>
                 <div class="stat-label">Dons reçus</div>
             </div>
             <div class="stat-card">
