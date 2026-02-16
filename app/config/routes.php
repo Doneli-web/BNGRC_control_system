@@ -5,6 +5,7 @@ use app\controllers\RegionController;
 use app\controllers\DonController;
 use app\controllers\TypeDonController;
 use app\controllers\ArticleController;
+use app\controllers\BesoinController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -39,9 +40,11 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/besoins', function() use($app){
         $typeDon = TypeDonController::findAll();
         $articles = ArticleController::findAll();
+        $villes = VilleController::getVilles();
         $app->render('besoins', [
             "typeDon" => $typeDon,
-            "articles" => $articles
+            "articles" => $articles,
+            "villes" => $villes
         ]);
     });
 
@@ -49,6 +52,36 @@ $router->group('/', function(Router $router) use ($app) {
         $data = VilleController::getVilleStats();
         Flight::json($data);
     });
+
+    $router->get('/villes', function() use($app){
+    $villes = VilleController::getVilles();
+    $stats = VilleController::getVilleStats();
+    
+    // Organiser les stats par ville
+    $ville_stats = [];
+    
+    // Si $stats est un tableau indexé
+    if(isset($stats[0]) && is_array($stats[0])) {
+        foreach($stats as $stat) {
+            $ville_id = $stat['ville_id'] ?? $stat['id'] ?? null;
+            if($ville_id) {
+                $ville_stats[$ville_id] = $stat;
+            }
+        }
+    } 
+    // Si $stats est déjà un tableau associatif
+    else {
+        $ville_stats = $stats;
+    }
+    
+    $app->render('villes', [
+        "villes" => $villes,
+        "ville_stats" => $ville_stats,
+        "total_villes" => count($villes)
+    ]);
+});
+
+    
 
     // API pour dashboard complet
     $router->get('/dashboard', function() {
@@ -78,6 +111,7 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::redirect('/dons');
     });
 
+<<<<<<< HEAD
     $router->get('/simulation', function() use($app){
         $app->render('simulation', [
         ]);
@@ -86,6 +120,17 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/villes', function() use($app){
         $app->render('villes', [
         ]);
+=======
+    $router->post('/besoins/add', function() use($app){
+        if(!isset($_POST["ville"]) || !isset($_POST["article"]) || !isset($_POST["quantite"])){
+            $_SESSION['error'] = "Tous les champs sont requis";
+            $app->redirect('/besoins');
+            return;
+        }
+        BesoinController::addBesoin($_POST["ville"], $_POST["article"], $_POST["quantite"]);
+        $_SESSION['success'] = "Besoin ajouté avec succès";
+        $app->redirect('/besoins');
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
     });
 
     $router->get('/*', function() use($app){

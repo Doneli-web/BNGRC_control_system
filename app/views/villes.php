@@ -4,8 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Villes - BNGRC</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+=======
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .stats-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-mini-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-mini-card .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: var(--font-display);
+        }
+        .stat-mini-card .label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+    </style>
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
 </head>
 <body>
     <!-- Navigation -->
@@ -51,14 +81,43 @@
     <!-- Main Content -->
     <main class="content-main">
         <div class="content-container">
+<<<<<<< HEAD
+=======
+            
+            <!-- Statistiques rapides -->
+            <div class="stats-mini-grid">
+                <div class="stat-mini-card">
+                    <div class="number"><?= htmlspecialchars($total_villes ?? count($villes)) ?></div>
+                    <div class="label">Villes totales</div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="number"><?= htmlspecialchars($total_regions ?? $regions_count ?? '0') ?></div>
+                    <div class="label">Régions</div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="number"><?= htmlspecialchars($total_besoins ?? '0') ?></div>
+                    <div class="label">Besoins enregistrés</div>
+                </div>
+                <div class="stat-mini-card">
+                    <div class="number"><?= htmlspecialchars($villes_urgentes ?? '0') ?></div>
+                    <div class="label">Villes urgentes</div>
+                </div>
+            </div>
+
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
             <!-- Cities Overview -->
             <div class="list-section">
                 <div class="list-header">
                     <h2>Villes concernées</h2>
                     <div class="list-actions">
+<<<<<<< HEAD
                         <input type="search" class="search-input" placeholder="Rechercher une ville..." 
                                onkeyup="filterVilles(this.value)">
                         <select class="filter-select-small" onchange="sortVilles(this.value)">
+=======
+                        <input type="search" class="search-input" id="searchInput" placeholder="Rechercher une ville...">
+                        <select class="filter-select-small" id="sortSelect">
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                             <option value="nom">Trier par nom</option>
                             <option value="besoins">Trier par besoins</option>
                             <option value="priorite">Trier par priorité</option>
@@ -66,14 +125,81 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <div class="cities-grid" id="villesGrid" style="margin-top: 2rem;">
                     <!-- City cards will be dynamically inserted -->
+=======
+                <div class="cities-grid" id="villesGrid">
+                    <?php if(empty($villes)): ?>
+                        <p style="text-align: center; color: var(--text-muted); padding: 2rem; grid-column: 1/-1;">
+                            Aucune ville disponible
+                        </p>
+                    <?php else: ?>
+                        <?php foreach($villes as $index => $ville): ?>
+                        <div class="city-card" data-nom="<?= htmlspecialchars($ville['name']) ?>" 
+                             data-besoins="<?= $ville_stats[$ville['id']]['total_besoins'] ?? 0 ?>"
+                             data-priorite="<?= $ville_stats[$ville['id']]['priorite'] ?? 'normal' ?>">
+                            <div class="city-header">
+                                <h3 class="city-name"><?= htmlspecialchars($ville['name']) ?></h3>
+                                <?php 
+                                $priorite = $ville_stats[$ville['id']]['priorite'] ?? 'normal';
+                                $badge_class = 'normal';
+                                $badge_text = 'Normal';
+                                if($priorite == 'urgent') {
+                                    $badge_class = 'urgent';
+                                    $badge_text = 'URGENT';
+                                } elseif($priorite == 'important') {
+                                    $badge_class = 'important';
+                                    $badge_text = 'Important';
+                                }
+                                ?>
+                                <span class="priority-badge <?= $badge_class ?>"><?= $badge_text ?></span>
+                            </div>
+                            <div class="needs-summary">
+                                
+                                <div class="need-item">
+                                    <span class="need-label">Nombre de besoins</span>
+                                    <span class="need-value"><?= $ville_stats[$ville['id']]['total_besoins'] ?? 0 ?></span>
+                                </div>
+                                <div class="need-item">
+                                    <span class="need-label">Montant total</span>
+                                    <span class="need-value"><?= number_format($ville_stats[$ville['id']]['montant_total'] ?? 0, 0, ',', ' ') ?> Ar</span>
+                                </div>
+                                <div class="need-item">
+                                    <span class="need-label">Région</span>
+                                    <span class="need-value"><?= htmlspecialchars($ville['region_name'] ?? 'N/A') ?></span>
+                                </div>
+                                <?php if(($ville_stats[$ville['id']]['taux_couverture'] ?? 0) > 0): ?>
+                                <div class="progress-group" style="margin-top: 0.5rem;">
+                                    <div class="progress-label">
+                                        <span>Couverture</span>
+                                        <span><?= $ville_stats[$ville['id']]['taux_couverture'] ?? 0 ?>%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: <?= $ville_stats[$ville['id']]['taux_couverture'] ?? 0 ?>%"></div>
+                                    </div>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                            <div style="margin-top: 1rem; text-align: right;">
+                                <a href="/villes/detail/<?= $ville['id'] ?>" class="btn-icon-small" title="Voir détails">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                 </div>
             </div>
 
             <!-- Detailed Information Panel -->
             <div class="form-card" style="margin-top: 2rem;">
                 <h2 style="margin-bottom: 1.5rem;">Informations sur les villes de Madagascar</h2>
+<<<<<<< HEAD
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
                     <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
                         <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">📍 Antananarivo</h3>
@@ -131,6 +257,20 @@
                             Population: ~55,000 habitants.
                         </p>
                     </div>
+=======
+                <div class="cities-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                    <?php foreach($villes as $ville): ?>
+                    <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">
+                            📍 <?= htmlspecialchars($ville['name']) ?>
+                        </h3>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                            <?= htmlspecialchars($ville['description'] ?? 'Population: à renseigner') ?>
+                        </p>
+                        <small style="color: var(--text-muted);">Région: <?= htmlspecialchars($ville['region_name'] ?? 'N/A') ?></small>
+                    </div>
+                    <?php endforeach; ?>
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                 </div>
             </div>
         </div>
@@ -147,9 +287,15 @@
                 <div class="footer-links">
                     <div class="link-group">
                         <h4>Navigation</h4>
+<<<<<<< HEAD
                         <a href="index.html">Tableau de bord</a>
                         <a href="besoins.html">Gestion des besoins</a>
                         <a href="dons.html">Gestion des dons</a>
+=======
+                        <a href="/">Tableau de bord</a>
+                        <a href="/besoins">Gestion des besoins</a>
+                        <a href="/dons">Gestion des dons</a>
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5
                     </div>
                     <div class="link-group">
                         <h4>Ressources</h4>
@@ -165,6 +311,7 @@
         </div>
     </footer>
 
+<<<<<<< HEAD
     <script>
         // Navigation
         const navToggle = document.getElementById('navToggle');
@@ -276,3 +423,8 @@
     </script>
 </body>
 </html>
+=======
+    <script src="/assets/js/villes.js"></script>
+</body>
+</html>
+>>>>>>> b816296a5d8fdbe2f9e3578a630cc788a3fdffc5

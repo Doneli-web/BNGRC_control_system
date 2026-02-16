@@ -66,20 +66,15 @@ ini_set("display_errors", 1);
                         </svg>
                     </button>
                 </div>
-                <form id="besoinForm" class="styled-form">
+                <form action="/besoins/add" method="post" id="besoinForm" class="styled-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="ville">Ville *</label>
-                            <select id="ville" required>
+                            <select id="ville" required name="ville">
                                 <option value="">Sélectionner une ville</option>
-                                <option value="Antananarivo">Antananarivo</option>
-                                <option value="Toamasina">Toamasina</option>
-                                <option value="Antsirabe">Antsirabe</option>
-                                <option value="Mahajanga">Mahajanga</option>
-                                <option value="Fianarantsoa">Fianarantsoa</option>
-                                <option value="Toliara">Toliara</option>
-                                <option value="Antsiranana">Antsiranana</option>
-                                <option value="Morondava">Morondava</option>
+                                <?php foreach($villes as $v) { ?>
+                                    <option value="<?= $v["id"] ?>"><?= $v["name"] ?></option>
+                                <?php } ?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -96,7 +91,7 @@ ini_set("display_errors", 1);
                     <div class="form-row">
                         <div class="form-group">
                             <label for="article">Article *</label>
-                            <select id="article" required onchange="updatePrixUnitaire()">
+                            <select id="article" name="article" required onchange="updatePrixUnitaire()">
                                 <option value="">Sélectionner un article</option>
                                 <?php foreach($articles as $a) { ?>
                                     <option value="<?= $a["id"] ?>"><?= $a["name"] ?></option>
@@ -106,7 +101,7 @@ ini_set("display_errors", 1);
                         <div class="form-group">
                             <label for="quantite">Quantité *</label>
                             <input type="number" id="quantite" min="1" step="1" value="1" required 
-                                   placeholder="Ex: 100">
+                                   placeholder="Ex: 100" name="quantite">
                         </div>
                     </div>
 
@@ -120,32 +115,6 @@ ini_set("display_errors", 1);
                             <label for="montantTotal">Montant total (Ar)</label>
                             <input type="text" id="montantTotal" readonly class="total-display">
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="priorite">Niveau de priorité</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="priorite" value="urgent" checked>
-                                <span class="radio-custom urgent"></span>
-                                <span>Urgent</span>
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="priorite" value="important">
-                                <span class="radio-custom important"></span>
-                                <span>Important</span>
-                            </label>
-                            <label class="radio-label">
-                                <input type="radio" name="priorite" value="normal">
-                                <span class="radio-custom normal"></span>
-                                <span>Normal</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes">Notes (optionnel)</label>
-                        <textarea id="notes" rows="3" placeholder="Informations complémentaires..."></textarea>
                     </div>
 
                     <div class="form-actions">
@@ -171,10 +140,9 @@ ini_set("display_errors", 1);
                                onkeyup="filterBesoins(this.value)">
                         <select class="filter-select-small" onchange="filterByVille(this.value)">
                             <option value="">Toutes les villes</option>
-                            <option value="Antananarivo">Antananarivo</option>
-                            <option value="Toamasina">Toamasina</option>
-                            <option value="Antsirabe">Antsirabe</option>
-                            <option value="Mahajanga">Mahajanga</option>
+                            <?php foreach($villes as $v) { ?>
+                                <option value="<?= $v["name"] ?>"><?= $v["name"] ?></option>
+                            <?php } ?>
                         </select>
                     </div>
                 </div>
@@ -190,7 +158,6 @@ ini_set("display_errors", 1);
                                 <th>Quantité</th>
                                 <th>Prix unitaire</th>
                                 <th>Montant total</th>
-                                <th>Priorité</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -204,7 +171,6 @@ ini_set("display_errors", 1);
                                 <td>500 kg</td>
                                 <td>5,000 Ar</td>
                                 <td><strong>2,500,000 Ar</strong></td>
-                                <td><span class="priority-badge urgent">Urgent</span></td>
                                 <td>
                                     <div class="action-buttons-small">
                                         <button class="btn-icon-small" title="Modifier">
@@ -230,7 +196,6 @@ ini_set("display_errors", 1);
                                 <td>200 unités</td>
                                 <td>25,000 Ar</td>
                                 <td><strong>5,000,000 Ar</strong></td>
-                                <td><span class="priority-badge important">Important</span></td>
                                 <td>
                                     <div class="action-buttons-small">
                                         <button class="btn-icon-small" title="Modifier">
@@ -283,5 +248,13 @@ ini_set("display_errors", 1);
             </div>
         </div>
     </footer>
+<?php 
+    session_start();
+    if(isset($_SESSION["message"])){ ?>
+        <script>alert('<?php echo $_SESSION["message"]; ?>');</script>
+        <?php 
+            unset($_SESSION["message"]);
+        ?>
+<?php } ?>
 </body>
 </html>
