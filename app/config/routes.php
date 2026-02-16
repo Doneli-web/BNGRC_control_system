@@ -74,10 +74,8 @@ $router->group('/', function(Router $router) use ($app) {
     $villes = VilleController::getVilles();
     $stats = VilleController::getVilleStats();
     
-    // Organiser les stats par ville
     $ville_stats = [];
     
-    // Si $stats est un tableau indexé
     if(isset($stats[0]) && is_array($stats[0])) {
         foreach($stats as $stat) {
             $ville_id = $stat['ville_id'] ?? $stat['id'] ?? null;
@@ -86,7 +84,6 @@ $router->group('/', function(Router $router) use ($app) {
             }
         }
     } 
-    // Si $stats est déjà un tableau associatif
     else {
         $ville_stats = $stats;
     }
@@ -163,25 +160,9 @@ $router->group('/', function(Router $router) use ($app) {
         $app->redirect('/besoins');
     });
 
-    $router->get('/', function() use($app){
-        // Fournir la vue avec quelques métriques basiques provenant de la BD
-        $db = Flight::db();
-        $stmt = $db->query("SELECT COUNT(*) FROM BNGRC_ville");
-        $totalVilles = (int)$stmt->fetchColumn();
-        $stmt2 = $db->query("SELECT COUNT(*) FROM BNGRC_don");
-        $totalDons = (int)$stmt2->fetchColumn();
-
-        $app->render('index', [
-            'total_villes' => $totalVilles,
-            'total_dons' => $totalDons
-        ]);
+    $router->get('/*', function() use($app){
+        $app->render('404', []);
     });
-
-    // Route pour lancer la simulation côté serveur
-    $router->post('/simulate', function() use($app){
-        \app\controllers\DispatchController::simulate();
-    });
-
    
     // $router->post('/register', function() use($app){
     //     $username = $_POST["username"];
