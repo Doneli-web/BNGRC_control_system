@@ -180,7 +180,7 @@
             <!-- Detailed Information Panel -->
             <div class="form-card" style="margin-top: 2rem;">
                 <h2 style="margin-bottom: 1.5rem;">Informations sur les villes de Madagascar</h2>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                <div class="cities-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                     <?php foreach($villes as $ville): ?>
                     <div style="padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">
                         <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary);">
@@ -211,9 +211,6 @@
                         <a href="/">Tableau de bord</a>
                         <a href="/besoins">Gestion des besoins</a>
                         <a href="/dons">Gestion des dons</a>
-                        <a href="/">Tableau de bord</a>
-                        <a href="/besoins">Gestion des besoins</a>
-                        <a href="/dons">Gestion des dons</a>
                     </div>
                     <div class="link-group">
                         <h4>Ressources</h4>
@@ -229,117 +226,6 @@
         </div>
     </footer>
 
-    <script>
-        // Navigation
-        const navToggle = document.getElementById('navToggle');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        if (navToggle && navMenu) {
-            navToggle.addEventListener('click', function() {
-                navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-            });
-        }
-
-        // Load and display villes with their data
-        function loadVilles() {
-            const besoins = JSON.parse(localStorage.getItem('besoins')) || [];
-            const villesData = {};
-            
-            besoins.forEach(besoin => {
-                if (!villesData[besoin.ville]) {
-                    villesData[besoin.ville] = {
-                        nom: besoin.ville,
-                        besoins: [],
-                        totalMontant: 0,
-                        prioriteMax: 'normal'
-                    };
-                }
-                
-                villesData[besoin.ville].besoins.push(besoin);
-                villesData[besoin.ville].totalMontant += besoin.montantTotal;
-                
-                if (besoin.priorite === 'urgent' || 
-                    (besoin.priorite === 'important' && villesData[besoin.ville].prioriteMax !== 'urgent')) {
-                    villesData[besoin.ville].prioriteMax = besoin.priorite;
-                }
-            });
-            
-            displayVilles(Object.values(villesData));
-        }
-
-        function displayVilles(villes) {
-            const grid = document.getElementById('villesGrid');
-            grid.innerHTML = '';
-            
-            if (villes.length === 0) {
-                grid.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">Aucune ville avec des besoins enregistrés</p>';
-                return;
-            }
-            
-            villes.forEach((ville, index) => {
-                const card = document.createElement('div');
-                card.className = 'city-card';
-                card.style.animation = `fadeInUp 0.5s ease-out ${index * 0.1}s both`;
-                
-                card.innerHTML = `
-                    <div class="city-header">
-                        <h3 class="city-name">${ville.nom}</h3>
-                        <span class="priority-badge ${ville.prioriteMax}">${ville.prioriteMax.toUpperCase()}</span>
-                    </div>
-                    <div class="needs-summary">
-                        <div class="need-item">
-                            <span class="need-label">Nombre de besoins</span>
-                            <span class="need-value">${ville.besoins.length}</span>
-                        </div>
-                        <div class="need-item">
-                            <span class="need-label">Montant total</span>
-                            <span class="need-value">${formatMoney(ville.totalMontant)} Ar</span>
-                        </div>
-                        <div class="need-item">
-                            <span class="need-label">Catégories</span>
-                            <span class="need-value">${getUniqueCategories(ville.besoins).join(', ')}</span>
-                        </div>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
-            });
-        }
-
-        function getUniqueCategories(besoins) {
-            const categories = [...new Set(besoins.map(b => b.categorie))];
-            const labels = {
-                'nature': 'Nature',
-                'materiel': 'Matériel',
-                'argent': 'Argent'
-            };
-            return categories.map(c => labels[c] || c);
-        }
-
-        function formatMoney(amount) {
-            return new Intl.NumberFormat('fr-MG').format(amount);
-        }
-
-        function filterVilles(searchTerm) {
-            const cards = document.querySelectorAll('.city-card');
-            const term = searchTerm.toLowerCase();
-            
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                card.style.display = text.includes(term) ? '' : 'none';
-            });
-        }
-
-        function sortVilles(criteria) {
-            // Implementation would depend on stored data
-            console.log('Sorting by:', criteria);
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', loadVilles);
-    </script>
-</body>
-</html>
     <script src="/assets/js/villes.js"></script>
 </body>
 </html>
