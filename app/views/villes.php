@@ -138,6 +138,7 @@
                                 <span class="priority-badge <?= $badge_class ?>"><?= $badge_text ?></span>
                             </div>
                             <div class="needs-summary">
+                                
                                 <div class="need-item">
                                     <span class="need-label">Nombre de besoins</span>
                                     <span class="need-value"><?= $ville_stats[$ville['id']]['total_besoins'] ?? 0 ?></span>
