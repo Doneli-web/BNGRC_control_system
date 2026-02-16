@@ -24,6 +24,7 @@
                 <li><a href="/" class="active">Tableau de bord</a></li>
                 <li><a href="/besoins">Besoins</a></li>
                 <li><a href="/dons">Dons</a></li>
+                <li><a href="/achats">Achats</a></li>
                 <li><a href="/villes">Villes</a></li>
                 <li><a href="/simulation">Simulation</a></li>
             </ul>
