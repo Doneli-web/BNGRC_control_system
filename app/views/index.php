@@ -23,7 +23,7 @@
             <ul class="nav-menu">
                 <li><a href="index.html" class="active">Tableau de bord</a></li>
                 <li><a href="besoins.html">Besoins</a></li>
-                <li><a href="dons.html">Dons</a></li>
+                <li><a href="/dons">Dons</a></li>
                 <li><a href="villes.html">Villes</a></li>
                 <li><a href="simulation.html">Simulation</a></li>
             </ul>
@@ -222,7 +222,7 @@
                         <h4>Navigation</h4>
                         <a href="index.html">Tableau de bord</a>
                         <a href="besoins.html">Gestion des besoins</a>
-                        <a href="dons.html">Gestion des dons</a>
+                        <a href="/dons">Gestion des dons</a>
                     </div>
                     <div class="link-group">
                         <h4>Ressources</h4>
