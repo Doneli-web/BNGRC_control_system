@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BNGRC - Système de Gestion des Dons</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
