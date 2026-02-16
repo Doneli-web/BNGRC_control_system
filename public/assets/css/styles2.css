@@ -1,0 +1,91 @@
+    .config-card {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .config-card .form-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .config-card input {
+            width: 100px;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .calcul-result {
+            background: var(--bg-tertiary);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+        }
+        .calcul-result p {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+        }
+        .calcul-result .total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .alert-success {
+            background: rgba(74, 139, 111, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        .alert-error {
+            background: rgba(196, 69, 54, 0.1);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+        .filter-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .btn-calculer {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-calculer:hover {
+            background: #3a6a8c;
+        }
+        .btn-acheter {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-acheter:hover {
+            background: #3b7a5c;
+        }
+        .last-update {
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
