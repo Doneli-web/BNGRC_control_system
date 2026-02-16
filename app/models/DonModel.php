@@ -13,7 +13,7 @@ class DonModel{
     }
 
     public function add($idArticle, $quantity){
-        $stmt = $this->db->prepare("INSERT INTO BNGRC_don(idArticle, quantite) VALUES (?, ?, ?)");
+        $stmt = $this->db->prepare("INSERT INTO BNGRC_don(idArticle, quantite) VALUES (?,?)");
         $stmt->execute([$idArticle, $quantity]);
     }
 
@@ -29,7 +29,7 @@ class DonModel{
     }
 
     public function findAllWithDetails(){
-        $stmt = $this->db->query("SELECT d.id, a.nom AS article, d.quantite FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id");
+        $stmt = $this->db->query("SELECT d.*, d.idArticle, a.name as article_nom, a.prix_unitaire FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -45,8 +45,21 @@ class DonModel{
     }
 
     public function getStatistiques(){
-        $stmt = $this->db->query("SELECT a.nom AS article, SUM(d.quantite) AS total_quantite FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id GROUP BY a.nom");
+        $stmt = $this->db->query("SELECT a.name AS article, SUM(d.quantite) AS total_quantite FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id GROUP BY a.name");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function delete($id){
+        
+        $check = $this->db->prepare("SELECT id FROM BNGRC_don WHERE id = ?");
+        $check->execute([$id]);
+        
+        if($check->fetch()) {
+            $stmt = $this->db->prepare("DELETE FROM BNGRC_don WHERE id = ?");
+            $stmt->execute([$id]);
+            return true;
+        }
+        return false;
     }
 
     
