@@ -48,6 +48,18 @@ CREATE TABLE BNGRC_besoin (
         REFERENCES BNGRC_article(id)
 );
 
+CREATE TABLE BNGRC_don (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    idArticle INT NOT NULL,
+    quantite INT NOT NULL,
+    date_de_saisie DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_don_article
+        FOREIGN KEY (idArticle)
+        REFERENCES BNGRC_article(id)
+);
+
+
 INSERT INTO BNGRC_typeDon(name) VALUES
 ('Nature'),
 ('Matériaux'),
