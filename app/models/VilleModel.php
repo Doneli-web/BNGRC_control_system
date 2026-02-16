@@ -44,7 +44,7 @@ class VilleModel{
             v.name AS ville,
             a.name AS article,
             a.prix_unitaire,
-            SUM(b.quantite) AS quantite,
+            b.quantite,
             COALESCE(SUM(disp.quantite_attribuee), 0) AS attribue
         FROM BNGRC_ville v
         LEFT JOIN BNGRC_besoin b ON b.idVille = v.id

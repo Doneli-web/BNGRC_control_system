@@ -38,6 +38,7 @@ CREATE TABLE BNGRC_besoin (
     idVille INT NOT NULL,
     idArticle INT NOT NULL,
     quantite INT NOT NULL,
+    status ENUM('non_commence', 'en_cours', 'comble') DEFAULT 'non_commence',
     date_de_saisie DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_besoin_ville
@@ -53,6 +54,7 @@ CREATE TABLE BNGRC_don (
     id INT AUTO_INCREMENT PRIMARY KEY,
     idArticle INT NOT NULL,
     quantite INT NOT NULL,
+    status ENUM('non_utilise', 'en_cours', 'utilise') DEFAULT 'non_utilise',
     date_de_saisie DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_don_article

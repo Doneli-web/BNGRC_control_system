@@ -7,12 +7,6 @@ use PDO;
 
 class DispatchController {
 
-    /**
-     * Simule la répartition des dons et insère les enregistrements dans BNGRC_dispatch.
-     * Règle: pour chaque don (ordre asc par date_de_saisie), on parcourt les besoins
-     * pour le même article (ordre asc par date_de_saisie) et on attribue jusqu'à
-     * épuisement du don ou satisfaction du besoin.
-     */
     public static function simulate(){
         $db = Flight::db();
         $dispatchModel = new DispatchModel($db);
@@ -20,18 +14,10 @@ class DispatchController {
         try {
             $db->beginTransaction();
 
-            // Nettoyer les anciennes dispatchs pour une simulation fraîche
-            $dispatchModel->clearAll();
 
-            // Récupérer tous les dons triés par date_de_saisie asc
-            $stmtD = $db->prepare("SELECT id, idArticle, quantite, date_de_saisie FROM BNGRC_don ORDER BY date_de_saisie ASC, id ASC");
-            $stmtD->execute();
-            $dons = $stmtD->fetchAll(PDO::FETCH_ASSOC);
-
-            // Préparer un tableau des besoins restants (quantité)
-            $stmtB = $db->prepare("SELECT id, idArticle, idVille, quantite, date_de_saisie FROM BNGRC_besoin ORDER BY date_de_saisie ASC, id ASC");
-            $stmtB->execute();
-            $besoins = $stmtB->fetchAll(PDO::FETCH_ASSOC);
+            // Simulation incrémentale
+            $besoins = $dispatchModel->getBesoinNonComble();
+            $dons = $dispatchModel->getDonDisponible();
 
             $besoinRemaining = [];
             foreach($besoins as $b){
@@ -40,12 +26,11 @@ class DispatchController {
 
             $inserted = 0;
 
-            // Pour chaque don, distribuer aux besoins correspondants (même idArticle)
             foreach($dons as $don){
                 $donQty = (int)$don['quantite'];
+                $donUsed = 0;
                 if($donQty <= 0) continue;
 
-                // parcourir les besoins pour cet article dans l'ordre de saisie
                 foreach($besoins as $b){
                     if((int)$b['idArticle'] !== (int)$don['idArticle']) continue;
                     $needId = $b['id'];
@@ -55,17 +40,27 @@ class DispatchController {
                     $alloc = min($donQty, $needRem);
                     if($alloc <= 0) continue;
 
-                    // Insérer en dispatch
                     $dispatchModel->insert($don['id'], $needId, $alloc, date('Y-m-d H:i:s'));
                     $inserted++;
 
-                    // Décrémenter
                     $donQty -= $alloc;
+                    $donUsed += $alloc;
                     $besoinRemaining[$needId] -= $alloc;
 
-                    // Si don épuisé -> passer au don suivant
+                    // Mettre à jour le statut du besoin
+                    $newStatus = 'en_cours';
+                    if($besoinRemaining[$needId] == 0) $newStatus = 'comble';
+                    elseif($besoinRemaining[$needId] < $b['quantite']) $newStatus = 'en_cours';
+                    else $newStatus = 'non_commence';
+                    $db->prepare("UPDATE BNGRC_besoin SET status = ? WHERE id = ?")->execute([$newStatus, $needId]);
+
                     if($donQty <= 0) break;
                 }
+                // Mettre à jour le statut du don
+                $donStatus = 'non_utilise';
+                if($donUsed == (int)$don['quantite']) $donStatus = 'utilise';
+                elseif($donUsed > 0 && $donUsed < (int)$don['quantite']) $donStatus = 'en_cours';
+                $db->prepare("UPDATE BNGRC_don SET status = ? WHERE id = ?")->execute([$donStatus, $don['id']]);
             }
 
             $db->commit();

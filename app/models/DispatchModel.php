@@ -11,8 +11,18 @@ class DispatchModel {
         $this->db = $db ?: Flight::db();
     }
 
-    public function clearAll(){
-        $this->db->exec("DELETE FROM BNGRC_dispatch");
+    // Suppression du clearAll, simulation incrémentale
+
+    public function getBesoinNonComble(){
+        $stmt = $this->db->prepare("SELECT * FROM BNGRC_besoin WHERE status != 'comble' ORDER BY date_de_saisie ASC, id ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDonDisponible(){
+        $stmt = $this->db->prepare("SELECT * FROM BNGRC_don WHERE status != 'utilise' ORDER BY date_de_saisie ASC, id ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function insert($idDon, $idBesoin, $quantite, $dateDispatch = null){
