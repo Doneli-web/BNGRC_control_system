@@ -28,5 +28,26 @@ class DonModel{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function findAllWithDetails(){
+        $stmt = $this->db->query("SELECT d.id, a.nom AS article, d.quantite FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getDonsByStatut($statut){
+        $stmt = $this->db->prepare("SELECT d.id, a.nom AS article, d.quantite FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id WHERE d.statut = ?");
+        $stmt->execute([$statut]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateStatut($id, $statut){
+        $stmt = $this->db->prepare("UPDATE BNGRC_don SET statut = ? WHERE id = ?");
+        $stmt->execute([$statut, $id]);
+    }
+
+    public function getStatistiques(){
+        $stmt = $this->db->query("SELECT a.nom AS article, SUM(d.quantite) AS total_quantite FROM BNGRC_don d JOIN BNGRC_article a ON d.idArticle = a.id GROUP BY a.nom");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     
 }
