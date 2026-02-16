@@ -32,12 +32,12 @@ TODO LIST (BNGRC):
                 - addArticle(name, idType, prix_unitaire)
                 - findAll()
                 - findById()
-            - besoinModel :
-                - addBesoin(idVille, idArticle, quantite, date_de_saisie)
-                - findAll()
-                - findById(id)
-                - findAllBesoinInfo()
-                - deleteBesoin(id)
+            - [OK] besoinModel :
+                - [OK] addBesoin(idVille, idArticle, quantite, date_de_saisie)
+                - [Ok] findAll()
+                - [Ok] findById(id)
+                - [Ok] findAllBesoinInfo()
+                - [Ok] deleteBesoin(id)
             - donModel :
                 - addDon(idArticle, quantite, date_de_saisie)
                 - findAll()

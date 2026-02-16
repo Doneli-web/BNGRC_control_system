@@ -1,325 +1,534 @@
-# TODO LIST BNGRC - RÉPARTITION DES TÂCHES
+# TODO LIST BNGRC - RÉPARTITION PAR FONCTIONNALITÉ COMPLÈTE
 **Projet Final S3 - Février 2026**  
-**Durée totale : 26h (16 fév 13h → 17 fév 16h)**  
+**Durée VERSION 1 : 1h20 (80 minutes)**  
 **Technologie : Flight PHP, MySQL**
+
+---
+
+## 🎯 PRINCIPE DE RÉPARTITION
+
+Chaque personne prend **UNE FONCTIONNALITÉ COMPLÈTE** de A à Z :
+- ✅ Base de données (ses tables)
+- ✅ Model (toutes les fonctions nécessaires)
+- ✅ Controller (toutes les routes API)
+- ✅ Routes Flight PHP
+- ✅ Intégration Frontend (HTML/JS/API)
+- ✅ Affichage final fonctionnel
+
+**Résultat** : 3 modules indépendants et complets en 1h20 !
 
 ---
 
 ## 📊 RÉSUMÉ DE LA RÉPARTITION
 
-| Personne | Temps total estimé | Tâches principales |
-|----------|-------------------|-------------------|
-| **Doneli** | ~8h30 | Base de données + Models (Region, Ville, TypeDon, Article) |
-| **Itokiana** | ~8h30 | Models (Besoin, Don) + Controllers (Region, Ville, TypeDon, Article) |
-| **Brandon** | ~9h00 | Controllers (Besoin, Don) + Intégration Frontend complète |
+| Personne | Fonctionnalité | Temps total | Livrables |
+|----------|---------------|-------------|-----------|
+| **DONELI** | 🏙️ **Gestion des VILLES & RÉGIONS** | 80 min | Module complet Villes |
+| **ITOKIANA** | 📦 **Gestion des BESOINS** | 80 min | Module complet Besoins |
+| **BRANDON** | 🎁 **Gestion des DONS** | 80 min | Module complet Dons |
 
 ---
 
-## 👤 DONELI - Base de données & Models de base
-**Temps total estimé : 8h30**
+## 👤 DONELI - MODULE VILLES & RÉGIONS
+**Fonctionnalité : Gestion complète des villes et régions**  
+**Durée totale : 80 minutes**
 
-### 1. BASE DE DONNÉES (3h00)
-**Responsabilité : Création complète de la structure**
+### 📅 PLANNING DÉTAILLÉ
 
-#### 1.1 Création de la base et des tables (2h00)
+#### ⏱️ 0-15 min : BASE DE DONNÉES
+**Objectif : Créer les tables nécessaires**
+
 ```sql
--- À créer dans l'ordre suivant :
-- [x] DATABASE BNGRC
-- [x] Table BNGRC_region(id, name)
-- [x] Table BNGRC_ville(id, name, idRegion)
-- [x] Table BNGRC_typeDon(id, name)
-- [x] Table BNGRC_article(id, name, idType, prix_unitaire)
-- [x] Table BNGRC_besoin(id, idVille, idArticle, quantite, date_de_saisie)
-- [x] Table BNGRC_don(id, idArticle, quantite, date_de_saisie)
+-- À créer dans l'ordre :
+[ ] Créer DATABASE BNGRC (2 min)
+[ ] Table BNGRC_region (5 min)
+    - id INT PRIMARY KEY AUTO_INCREMENT
+    - name VARCHAR(100) NOT NULL
+    
+[ ] Table BNGRC_ville (5 min)
+    - id INT PRIMARY KEY AUTO_INCREMENT
+    - name VARCHAR(100) NOT NULL
+    - idRegion INT NOT NULL
+    - FOREIGN KEY (idRegion) REFERENCES BNGRC_region(id)
+    
+[ ] INSERT données initiales (3 min)
+    - Régions : Analamanga, Atsinanana, Vakinankaratra
+    - Villes : Antananarivo, Toamasina, Antsirabe, Mahajanga
 ```
-**Note : Ajouter les contraintes de clés étrangères et index nécessaires**
 
-#### 1.2 Script de données initiales (1h00)
+#### ⏱️ 15-40 min : MODELS (25 min)
+**Objectif : Créer les classes Model**
+
+**Fichier : `models/RegionModel.php`** (10 min)
+```php
+[ ] class RegionModel
+[ ] __construct($db) - 1 min
+[ ] findAll() - SELECT * FROM BNGRC_region - 3 min
+[ ] findById($id) - SELECT avec WHERE - 2 min
+[ ] addRegion($name) - INSERT - 2 min
+[ ] Tests de base - 2 min
+```
+
+**Fichier : `models/VilleModel.php`** (15 min)
+```php
+[ ] class VilleModel
+[ ] __construct($db) - 1 min
+[ ] findAll() - SELECT * FROM BNGRC_ville - 2 min
+[ ] findById($id) - SELECT avec WHERE - 2 min
+[ ] addVille($name, $idRegion) - INSERT - 2 min
+[ ] findVilleWithRegion() - SELECT avec JOIN - 5 min
+[ ] getVilleStats() - COUNT besoins/dons par ville - 3 min
+```
+
+#### ⏱️ 40-55 min : CONTROLLERS & ROUTES (15 min)
+**Objectif : Créer les endpoints API**
+
+**Fichier : `controllers/VilleController.php`** (15 min)
+```php
+[ ] class VilleController - 1 min
+[ ] __construct($villeModel, $regionModel) - 1 min
+
+[ ] GET /api/regions - getRegions() - 2 min
+[ ] GET /api/regions/:id - getRegionById($id) - 2 min
+[ ] POST /api/regions - addRegion() - 2 min
+
+[ ] GET /api/villes - getVilles() - 2 min
+[ ] GET /api/villes/:id - getVilleById($id) - 2 min
+[ ] POST /api/villes - addVille() - 2 min
+[ ] GET /api/villes/stats - getVilleStats() - 3 min
+```
+
+**Fichier : `routes.php`** (inclus ci-dessus)
+```php
+[ ] Flight::route('GET /api/regions', ...) - dans le temps controller
+[ ] Flight::route('GET /api/villes', ...)
+[ ] etc.
+```
+
+#### ⏱️ 55-80 min : FRONTEND (25 min)
+**Objectif : Page fonctionnelle Villes**
+
+**Fichier : `villes.html` (modification)** (25 min)
+```javascript
+[ ] Fonction loadRegions() - appel API - 3 min
+[ ] Fonction loadVilles() - appel API avec stats - 5 min
+[ ] Affichage dynamique des villes avec cartes - 7 min
+[ ] Formulaire ajout ville avec select région - 5 min
+[ ] Fonction addVille() - POST API - 3 min
+[ ] Tests et ajustements - 2 min
+```
+
+### ✅ LIVRABLES DONELI
+- [x] Tables region + ville créées et remplies
+- [x] RegionModel fonctionnel
+- [x] VilleModel fonctionnel avec stats
+- [x] 7 routes API opérationnelles
+- [x] Page villes.html entièrement fonctionnelle
+- [x] Affichage des villes avec leurs statistiques
+
+---
+
+## 👤 ITOKIANA - MODULE BESOINS
+**Fonctionnalité : Gestion complète des besoins**  
+**Durée totale : 80 minutes**
+
+### 📅 PLANNING DÉTAILLÉ
+
+#### ⏱️ 0-15 min : BASE DE DONNÉES
+**Objectif : Créer les tables nécessaires**
+
 ```sql
-- [x] INSERT régions de Madagascar (Analamanga, Atsinanana, etc.)
-- [x] INSERT villes (Antananarivo, Toamasina, etc.)
-- [x] INSERT types de dons (nature, materiel, argent)
-- [x] INSERT articles avec prix unitaires
-      (Riz: 5000 Ar, Huile: 12000 Ar, Tôles: 25000 Ar, etc.)
+-- À créer dans l'ordre :
+[ ] Table BNGRC_typeDon (5 min)
+    - id INT PRIMARY KEY AUTO_INCREMENT
+    - name VARCHAR(50) NOT NULL
+    
+[ ] Table BNGRC_article (5 min)
+    - id INT PRIMARY KEY AUTO_INCREMENT
+    - name VARCHAR(100) NOT NULL
+    - idType INT NOT NULL
+    - prix_unitaire DECIMAL(10,2) NOT NULL
+    - FOREIGN KEY (idType) REFERENCES BNGRC_typeDon(id)
+    
+[ ] Table BNGRC_besoin (3 min)
+    - id INT PRIMARY KEY AUTO_INCREMENT
+    - idVille INT NOT NULL
+    - idArticle INT NOT NULL
+    - quantite DECIMAL(10,2) NOT NULL
+    - date_de_saisie DATETIME DEFAULT CURRENT_TIMESTAMP
+    - FOREIGN KEY (idVille) REFERENCES BNGRC_ville(id)
+    - FOREIGN KEY (idArticle) REFERENCES BNGRC_article(id)
+    
+[ ] INSERT données initiales (2 min)
+    - Types : nature, materiel, argent
+    - Articles : Riz (5000), Huile (12000), Tôles (25000), etc.
 ```
 
-### 2. MODELS DE BASE (5h30)
+#### ⏱️ 15-40 min : MODELS (25 min)
+**Objectif : Créer les classes Model**
 
-#### 2.1 RegionModel (1h00)
-- [x] `addRegion(name)` - 15min
-- [x] `findAll()` - 15min
-- [x] `findById(id)` - 15min
-- [x] Tests et validation - 15min
+**Fichier : `models/TypeDonModel.php`** (8 min)
+```php
+[ ] class TypeDonModel
+[ ] __construct($db) - 1 min
+[ ] findAll() - SELECT * FROM BNGRC_typeDon - 2 min
+[ ] findById($id) - SELECT avec WHERE - 2 min
+[ ] addType($name) - INSERT - 2 min
+[ ] Tests - 1 min
+```
 
-#### 2.2 VilleModel (2h00)
-- [x] `addVille(name, idRegion)` - 20min
-- [x] `findAll()` - 20min
-- [x] `findById(id)` - 20min
-- [x] `findAllBesoin()` - 30min *(requête JOIN)*
-- [x] `findAllDon()` - 30min *(requête JOIN)*
-- [x] Tests et validation - 20min
+**Fichier : `models/ArticleModel.php`** (10 min)
+```php
+[ ] class ArticleModel
+[ ] __construct($db) - 1 min
+[ ] findAll() - SELECT * FROM BNGRC_article - 2 min
+[ ] findById($id) - SELECT avec WHERE - 2 min
+[ ] findByType($idType) - SELECT avec WHERE - 2 min
+[ ] addArticle($name, $idType, $prix) - INSERT - 2 min
+[ ] Tests - 1 min
+```
 
-#### 2.3 TypeDonModel (1h00)
-- [x] `addType(name)` - 15min
-- [x] `findAll()` - 15min
-- [x] `findById(id)` - 15min
-- [x] Tests et validation - 15min
+**Fichier : `models/BesoinModel.php`** (7 min - déjà fait ✅)
+```php
+[ ] class BesoinModel
+[ ] Vérifier et compléter si nécessaire - 2 min
+[ ] findAllWithDetails() - SELECT avec JOIN multiple - 3 min
+      (besoin + ville + article + type)
+[ ] getBesoinsByVille($idVille) - SELECT avec WHERE - 2 min
+```
 
-#### 2.4 ArticleModel (1h30)
-- [x] `addArticle(name, idType, prix_unitaire)` - 25min
-- [x] `findAll()` - 20min
-- [x] `findById(id)` - 20min
-- [x] `findByType(idType)` - 25min *(méthode bonus utile)*
-- [x] Tests et validation - 20min
+#### ⏱️ 40-55 min : CONTROLLERS & ROUTES (15 min)
+**Objectif : Créer les endpoints API**
 
----
+**Fichier : `controllers/BesoinController.php`** (15 min)
+```php
+[ ] class BesoinController - 1 min
+[ ] __construct($besoinModel, $articleModel, $typeModel) - 1 min
 
-## 👤 ITOKIANA - Models avancés & Controllers de base
-**Temps total estimé : 8h30**
+[ ] GET /api/types - getTypes() - 2 min
+[ ] GET /api/articles - getArticles() - 2 min
+[ ] GET /api/articles/type/:id - getArticlesByType($id) - 2 min
 
-### 1. MODELS AVANCÉS (4h00)
+[ ] GET /api/besoins - getBesoins() - 2 min
+[ ] GET /api/besoins/:id - getBesoinById($id) - 2 min
+[ ] POST /api/besoins - addBesoin() - 2 min
+[ ] DELETE /api/besoins/:id - deleteBesoin($id) - 2 min
+[ ] GET /api/besoins/ville/:id - getBesoinsByVille($id) - 2 min
+```
 
-#### 1.1 BesoinModel (2h00) ✅ DÉJÀ FAIT
-- [✅] `addBesoin(idVille, idArticle, quantite, date_de_saisie)`
-- [✅] `findAll()`
-- [✅] `findById(id)`
-- [✅] `findAllBesoinInfo()` *(avec JOIN pour infos complètes)*
-- [✅] `deleteBesoin(id)`
-- [✅] Tests et validation
+#### ⏱️ 55-80 min : FRONTEND (25 min)
+**Objectif : Page fonctionnelle Besoins**
 
-#### 1.2 DonModel (2h00)
-- [x] `addDon(idArticle, quantite, date_de_saisie)` - 30min
-- [x] `findAll()` - 20min
-- [x] `findById(id)` - 20min
-- [x] `findAllDonInfo()` - 40min *(requête JOIN complexe)*
-- [x] `updateStatut(id, statut)` - 20min *(pour simulation)*
-- [x] Tests et validation - 30min
+**Fichier : `besoins.html` (modification)** (25 min)
+```javascript
+[ ] Fonction loadTypes() - appel API - 2 min
+[ ] Fonction loadArticles(idType) - appel API dynamique - 3 min
+[ ] Fonction updateArticleOptions() - modification - 2 min
+[ ] Fonction loadBesoins() - appel API avec détails - 5 min
+[ ] Affichage tableau avec toutes les infos (JOIN) - 5 min
+[ ] Formulaire ajout besoin connecté API - 4 min
+[ ] Fonction addBesoin() - POST API - 2 min
+[ ] Fonction deleteBesoin(id) - DELETE API - 2 min
+```
 
-### 2. CONTROLLERS DE BASE (4h30)
-
-#### 2.1 RegionController (45min)
-- [x] `addRegion(name)` - Route POST - 15min
-- [x] `getAll()` - Route GET - 10min
-- [x] `getById(id)` - Route GET - 10min
-- [x] Tests API - 10min
-
-#### 2.2 VilleController (1h30)
-- [x] `addVille(name, idRegion)` - Route POST - 20min
-- [x] `getAll()` - Route GET - 15min
-- [x] `getById(id)` - Route GET - 15min
-- [x] `getVilleRegion()` - Route GET - 20min *(liste avec régions)*
-- [x] Tests API - 20min
-
-#### 2.3 TypeDonController (45min)
-- [x] `addType(name)` - Route POST - 15min
-- [x] `getAll()` - Route GET - 10min
-- [x] `getById(id)` - Route GET - 10min
-- [x] Tests API - 10min
-
-#### 2.4 ArticleController (1h30)
-- [x] `addArticle(name, idType, prix_unitaire)` - Route POST - 25min
-- [x] `getAll()` - Route GET - 15min
-- [x] `getById(id)` - Route GET - 15min
-- [x] `getByType(idType)` - Route GET - 20min *(pour filtrage)*
-- [x] Tests API - 15min
+### ✅ LIVRABLES ITOKIANA
+- [x] Tables typeDon + article + besoin créées et remplies
+- [x] TypeDonModel fonctionnel
+- [x] ArticleModel fonctionnel
+- [x] BesoinModel avec requêtes complexes
+- [x] 8 routes API opérationnelles
+- [x] Page besoins.html entièrement fonctionnelle
+- [x] CRUD complet sur les besoins
 
 ---
 
-## 👤 BRANDON - Controllers principaux & Intégration Frontend
-**Temps total estimé : 9h00**
+## 👤 BRANDON - MODULE DONS
+**Fonctionnalité : Gestion complète des dons**  
+**Durée totale : 80 minutes**
 
-### 1. CONTROLLERS PRINCIPAUX (3h00)
+### 📅 PLANNING DÉTAILLÉ
 
-#### 1.1 BesoinController (1h30)
-- [x] `addBesoin(idVille, idArticle, quantite, date_de_saisie)` - POST - 25min
-- [x] `getAll()` - GET - 15min
-- [x] `getById(id)` - GET - 15min
-- [x] `getAllBesoinInfo()` - GET - 25min *(données complètes avec JOIN)*
-- [x] `deleteBesoin(id)` - DELETE - 10min
-- [x] Tests API - 20min
+#### ⏱️ 0-15 min : BASE DE DONNÉES + CONFIG
+**Objectif : Table don + Configuration projet**
 
-#### 1.2 DonController (1h30)
-- [x] `addDon(idArticle, quantite, date_de_saisie)` - POST - 25min
-- [x] `getAll()` - GET - 15min
-- [x] `getById(id)` - GET - 15min
-- [x] `getAllDonInfo()` - GET - 25min *(données complètes avec JOIN)*
-- [x] Tests API - 20min
+```sql
+-- À créer :
+[ ] Table BNGRC_don (5 min)
+    - id INT PRIMARY KEY AUTO_INCREMENT
+    - idArticle INT NOT NULL
+    - quantite DECIMAL(10,2) NOT NULL
+    - date_de_saisie DATETIME DEFAULT CURRENT_TIMESTAMP
+    - donateur VARCHAR(200)
+    - type_donateur VARCHAR(50)
+    - statut VARCHAR(50) DEFAULT 'en_attente'
+    - FOREIGN KEY (idArticle) REFERENCES BNGRC_article(id)
+    
+[ ] INSERT données de test (2 min)
+```
 
-### 2. INTÉGRATION FRONTEND (6h00)
+**Configuration Flight PHP** (8 min)
+```php
+[ ] Fichier index.php - initialisation Flight - 2 min
+[ ] Fichier config/database.php - connexion MySQL - 3 min
+[ ] Inclusion des routes et models - 2 min
+[ ] Test connexion - 1 min
+```
 
-#### 2.1 Configuration & Structure (1h00)
-- [x] Configuration Flight PHP - 20min
-- [x] Configuration connexion MySQL - 15min
-- [x] Structure des routes - 15min
-- [x] Gestion CORS et headers - 10min
+#### ⏱️ 15-35 min : MODEL (20 min)
+**Objectif : Créer DonModel complet**
 
-#### 2.2 Page Besoins (1h30)
-- [x] Connexion formulaire → API `/besoins` (POST) - 30min
-- [x] Chargement articles dynamique par catégorie - 20min
-- [x] Affichage liste besoins depuis API - 30min
-- [x] Fonctions édition/suppression - 20min
-- [x] Tests d'intégration - 10min
+**Fichier : `models/DonModel.php`** (20 min)
+```php
+[ ] class DonModel - 1 min
+[ ] __construct($db) - 1 min
+[ ] findAll() - SELECT * FROM BNGRC_don - 2 min
+[ ] findById($id) - SELECT avec WHERE - 2 min
+[ ] addDon($idArticle, $quantite, $donateur, $type) - INSERT - 3 min
+[ ] findAllWithDetails() - SELECT avec JOIN (don + article + type) - 5 min
+[ ] getDonsByStatut($statut) - SELECT avec WHERE - 2 min
+[ ] updateStatut($id, $statut) - UPDATE - 2 min
+[ ] getStatistiques() - COUNT, SUM par statut - 3 min
+[ ] Tests - 2 min
+```
 
-#### 2.3 Page Dons (1h30)
-- [x] Connexion formulaire → API `/dons` (POST) - 30min
-- [x] Chargement articles dynamique - 20min
-- [x] Affichage liste dons depuis API - 30min
-- [x] Filtres et recherche - 20min
-- [x] Tests d'intégration - 10min
+#### ⏱️ 35-50 min : CONTROLLER & ROUTES (15 min)
+**Objectif : Créer les endpoints API**
 
-#### 2.4 Tableau de Bord (1h30)
-- [x] Récupération données villes avec besoins - 30min
-- [x] Calcul statistiques en temps réel - 30min
-- [x] Affichage cartes villes dynamiques - 20min
-- [x] Synchronisation données - 10min
+**Fichier : `controllers/DonController.php`** (15 min)
+```php
+[ ] class DonController - 1 min
+[ ] __construct($donModel, $articleModel) - 1 min
 
-#### 2.5 Page Simulation (30min)
-- [x] Connexion API pour récupération données - 15min
-- [x] Affichage résultats simulation - 15min
+[ ] GET /api/dons - getDons() - 2 min
+[ ] GET /api/dons/:id - getDonById($id) - 2 min
+[ ] POST /api/dons - addDon() - 3 min
+      (validation complète des données)
+[ ] GET /api/dons/statut/:statut - getDonsByStatut($statut) - 2 min
+[ ] PUT /api/dons/:id/statut - updateStatut($id) - 2 min
+[ ] GET /api/dons/stats - getStatistiques() - 2 min
+[ ] Tests Postman/curl - 1 min
+```
 
----
+#### ⏱️ 50-80 min : FRONTEND (30 min)
+**Objectif : Page fonctionnelle Dons + Dashboard**
 
-## 🔄 PLANNING DE TRAVAIL PARALLÈLE
+**Fichier : `dons.html` (modification)** (20 min)
+```javascript
+[ ] Fonction loadArticles() - appel API - 2 min
+[ ] Fonction loadDons() - appel API avec détails - 4 min
+[ ] Affichage tableau complet avec infos JOIN - 5 min
+[ ] Formulaire ajout don connecté API - 4 min
+[ ] Fonction addDon() - POST API - 2 min
+[ ] Filtres par statut - appel API - 2 min
+[ ] Affichage statistiques (stat boxes) - 3 min
+```
 
-### Phase 1 : JOUR 1 - 13h à 21h (8h)
-**Tout le monde travaille en parallèle sans conflit**
+**Fichier : `index.html` (modification Dashboard)** (10 min)
+```javascript
+[ ] Fonction loadDashboardData() - 3 min
+      - Appel API villes/stats
+      - Appel API besoins
+      - Appel API dons
+[ ] Calcul et affichage statistiques globales - 4 min
+[ ] Affichage cartes villes avec données réelles - 3 min
+```
 
-- **Doneli** : Base de données (3h) + RegionModel + TypeDonModel (2h)
-- **Itokiana** : BesoinModel déjà fait, travaille sur DonModel (2h) + RegionController (45min)
-- **Brandon** : Prépare structure projet Flight PHP + Configuration (1h) + BesoinController (1h30)
-
-### Phase 2 : JOUR 1 - 21h à 23h (2h) - PAUSE DÎNER POSSIBLE
-
-### Phase 3 : JOUR 2 - 0h à 6h (6h) - SESSION NUIT
-**Travail intensif en parallèle**
-
-- **Doneli** : VilleModel (2h) + ArticleModel (1h30) + Documentation models
-- **Itokiana** : VilleController (1h30) + TypeDonController (45min) + ArticleController (1h30)
-- **Brandon** : DonController (1h30) + Intégration Besoins (1h30) + Intégration Dons (1h30)
-
-### Phase 4 : JOUR 2 - 6h à 8h (2h) - PAUSE REPOS
-
-### Phase 5 : JOUR 2 - 8h à 16h (8h) - FINALISATION
-**Intégration finale et tests**
-
-- **Doneli** : Tests models + Aide intégration + Données de démonstration
-- **Itokiana** : Tests controllers + Documentation API + Aide intégration
-- **Brandon** : Intégration Dashboard (1h30) + Simulation (30min) + Tests finaux + Déploiement
-
----
-
-## 📋 POINTS DE SYNCHRONISATION OBLIGATOIRES
-
-### Sync 1 : Jour 1 - 16h (après 3h de travail)
-**Objectif : Validation de la base de données**
-- Doneli présente les tables créées
-- Itokiana et Brandon valident la structure
-- Décision : Go / No-Go pour continuer
-
-### Sync 2 : Jour 1 - 21h (après 8h de travail)
-**Objectif : Validation Models de base**
-- Doneli : démo RegionModel, TypeDonModel
-- Itokiana : démo DonModel
-- Brandon : démo configuration Flight + routes de base
-
-### Sync 3 : Jour 2 - 6h (après 17h de travail)
-**Objectif : Validation Controllers**
-- Itokiana : démo tous les controllers de base
-- Brandon : démo BesoinController, DonController
-- Tests d'intégration API
-
-### Sync 4 : Jour 2 - 12h (après 23h de travail)
-**Objectif : Tests finaux**
-- Brandon : démo intégration complète
-- Tests end-to-end tous ensemble
-- Correction bugs
-
-### Sync Final : Jour 2 - 15h (avant deadline 16h)
-**Objectif : Préparation démo**
-- Répétition présentation
-- Vérification déploiement
-- Préparation documentation
+### ✅ LIVRABLES BRANDON
+- [x] Table don créée et remplie
+- [x] Configuration Flight PHP complète
+- [x] DonModel avec fonctions avancées
+- [x] 6 routes API opérationnelles
+- [x] Page dons.html entièrement fonctionnelle
+- [x] Dashboard mis à jour avec vraies données
+- [x] CRUD complet sur les dons
 
 ---
 
-## ⚠️ RÈGLES DE COLLABORATION
+## 🔄 SYNCHRONISATION & TRAVAIL EN PARALLÈLE
 
-### Communication
-- ✅ Utiliser un groupe de discussion actif
-- ✅ Signaler immédiatement les blocages
-- ✅ Partager les fichiers via Git ou drive partagé
-- ✅ Documenter chaque fonction créée
+### 📍 Point de sync 1 : T+20 min (après 20 min)
+**Vérification rapide base de données**
+- Chacun montre ses tables créées
+- Validation que tout est OK
+- 2 minutes max
 
-### Conventions de code
-- ✅ Nommage cohérent (camelCase pour méthodes, PascalCase pour classes)
-- ✅ Commentaires en français
-- ✅ Gestion d'erreurs systématique (try-catch)
-- ✅ Validation des données entrantes
+### 📍 Point de sync 2 : T+45 min (après 45 min)
+**Vérification Models**
+- Chacun teste une fonction de son Model
+- Partage des problèmes éventuels
+- 3 minutes max
 
-### Gestion des conflits
-- ❌ Ne pas modifier les fichiers des autres sans accord
-- ✅ Créer des branches Git séparées si possible
-- ✅ Tester son code avant de partager
-- ✅ Demander de l'aide dès que nécessaire
+### 📍 Point de sync 3 : T+60 min (après 1h)
+**Vérification API**
+- Chacun teste une route avec Postman
+- Validation que les réponses JSON sont correctes
+- 3 minutes max
 
----
-
-## 🎯 LIVRABLES FINAUX
-
-### Doneli
-- [x] Script SQL complet (création + données)
-- [x] 4 Models testés et fonctionnels
-- [x] Documentation des models
-- [x] Jeu de données de démonstration
-
-### Itokiana
-- [x] 2 Models (Besoin ✅, Don)
-- [x] 4 Controllers avec toutes les routes
-- [x] Documentation API (routes, paramètres, réponses)
-- [x] Collection Postman/Insomnia pour tests
-
-### Brandon
-- [x] 2 Controllers (Besoin, Don)
-- [x] Frontend complètement intégré avec API
-- [x] Application déployée et fonctionnelle
-- [x] Guide d'installation et d'utilisation
+### 📍 Point de sync 4 : T+75 min (avant la fin)
+**Tests croisés**
+- Test rapide des pages des autres
+- Derniers ajustements
+- 5 minutes
 
 ---
 
-## 📊 CHECKLIST DE FIN DE PROJET
+## ⚙️ CONFIGURATION COMMUNE (À FAIRE ENSEMBLE - 5 MIN AU DÉBUT)
 
-### Tests techniques
-- [ ] Toutes les routes API fonctionnent
-- [ ] Les données s'affichent correctement
-- [ ] Pas d'erreurs JavaScript dans la console
-- [ ] Pas d'erreurs PHP dans les logs
-- [ ] La simulation fonctionne correctement
+**Fichier : `config/database.php`**
+```php
+<?php
+class Database {
+    private $host = "localhost";
+    private $db_name = "BNGRC";
+    private $username = "root";
+    private $password = "";
+    public $conn;
 
-### Qualité
-- [ ] Code commenté et propre
-- [ ] Pas de code dupliqué
-- [ ] Gestion des erreurs présente
-- [ ] Interface responsive
+    public function getConnection() {
+        $this->conn = null;
+        try {
+            $this->conn = new PDO(
+                "mysql:host=" . $this->host . ";dbname=" . $this->db_name,
+                $this->username,
+                $this->password
+            );
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+            echo "Erreur: " . $e->getMessage();
+        }
+        return $this->conn;
+    }
+}
+```
 
-### Documentation
-- [ ] README avec instructions d'installation
-- [ ] Documentation API
-- [ ] Script SQL fourni
-- [ ] Captures d'écran de l'application
+**Fichier : `index.php`** (Brandon le crée, les autres l'utilisent)
+```php
+<?php
+require 'vendor/autoload.php';
+require 'config/database.php';
+
+// CORS
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header('Access-Control-Allow-Headers: Content-Type');
+
+// Initialisation
+$db = new Database();
+$conn = $db->getConnection();
+
+// Routes - chacun ajoute les siennes
+require 'routes/ville_routes.php';     // Doneli
+require 'routes/besoin_routes.php';    // Itokiana
+require 'routes/don_routes.php';       // Brandon
+
+Flight::start();
+```
 
 ---
 
-## 🚀 BONUS SI TEMPS DISPONIBLE
-*(À faire seulement si tout le reste est terminé)*
+## 📂 STRUCTURE DES FICHIERS
 
-- [ ] Système de pagination pour les listes
-- [ ] Graphiques sur le dashboard
-- [ ] Export PDF des rapports
-- [ ] Authentification utilisateur simple
-- [ ] Validation avancée des formulaires
+```
+bngrc-backend/
+├── index.php                    # Brandon - Point d'entrée
+├── config/
+│   └── database.php            # Brandon - Config DB
+├── models/
+│   ├── RegionModel.php         # Doneli
+│   ├── VilleModel.php          # Doneli
+│   ├── TypeDonModel.php        # Itokiana
+│   ├── ArticleModel.php        # Itokiana
+│   ├── BesoinModel.php         # Itokiana
+│   └── DonModel.php            # Brandon
+├── controllers/
+│   ├── VilleController.php     # Doneli
+│   ├── BesoinController.php    # Itokiana
+│   └── DonController.php       # Brandon
+└── routes/
+    ├── ville_routes.php        # Doneli
+    ├── besoin_routes.php       # Itokiana
+    └── don_routes.php          # Brandon
+
+bngrc-frontend/
+├── index.html                   # Brandon modifie
+├── villes.html                  # Doneli modifie
+├── besoins.html                 # Itokiana modifie
+├── dons.html                    # Brandon modifie
+├── styles.css                   # Commun (déjà fait)
+└── ... (autres fichiers JS)
+```
 
 ---
 
-**Bonne chance à l'équipe ! Restez concentrés et communiquez bien ! 💪**
+## ✅ CHECKLIST FINALE (T+80 min)
 
-*Dernière mise à jour : 16 février 2026*
+### Doneli - Module Villes
+- [ ] Tables region + ville créées
+- [ ] 2 Models fonctionnels
+- [ ] 7 routes API testées
+- [ ] Page villes.html affiche les données de l'API
+- [ ] Formulaire ajout ville fonctionne
+
+### Itokiana - Module Besoins
+- [ ] Tables typeDon + article + besoin créées
+- [ ] 3 Models fonctionnels
+- [ ] 8 routes API testées
+- [ ] Page besoins.html affiche les données de l'API
+- [ ] CRUD complet fonctionne
+
+### Brandon - Module Dons
+- [ ] Table don créée
+- [ ] Configuration Flight PHP OK
+- [ ] DonModel fonctionnel
+- [ ] 6 routes API testées
+- [ ] Page dons.html affiche les données de l'API
+- [ ] Dashboard affiche données réelles
+
+---
+
+## 🎯 RÈGLES D'OR
+
+1. **Ne pas attendre les autres** : Chacun travaille sur son module
+2. **Tester au fur et à mesure** : Ne pas attendre la fin
+3. **Documenter rapidement** : Commentaires dans le code
+4. **Communiquer les blocages** : Demander de l'aide immédiatement
+5. **Respecter les conventions** : Nommage cohérent pour tous
+
+---
+
+## 🚀 COMMANDES UTILES
+
+### Démarrage serveur Flight PHP
+```bash
+php -S localhost:8000 index.php
+```
+
+### Test rapide API
+```bash
+# Test GET
+curl http://localhost:8000/api/villes
+
+# Test POST
+curl -X POST http://localhost:8000/api/besoins \
+  -H "Content-Type: application/json" \
+  -d '{"idVille":1,"idArticle":1,"quantite":100}'
+```
+
+---
+
+## 🎓 RÉSULTAT ATTENDU APRÈS 1H20
+
+✅ Application complète fonctionnelle avec :
+- Backend API REST complet (21 routes)
+- Frontend intégré avec vraies données
+- 3 modules indépendants qui communiquent
+- Base de données opérationnelle
+- CRUD fonctionnel sur toutes les entités
+
+**Chaque personne maîtrise sa fonctionnalité de bout en bout !**
+
+---
+
+**Bon courage ! Vous avez 1h20 pour briller ! 💪⚡**
+
+*Version 1 - 16 février 2026*
