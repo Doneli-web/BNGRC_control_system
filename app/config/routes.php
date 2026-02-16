@@ -12,19 +12,11 @@ use flight\net\Router;
  */
 
 // This wraps all routes in the group with the SecurityHeadersMiddleware
-$router->group('/api', function(Router $router) use ($app) {
+$router->group('/', function(Router $router) use ($app) {
 
-<<<<<<< HEAD
-    $router->post('/regions', function() use($app){
-        $regions = RegionController::getRegions();
-        $app->render('villes', [
-            "regions"=>$regions
-        ]);
-=======
     // $router->get('/', [ UserController::class, 'getTrajets' ]);
     $router->get('/', function() use($app){
         $app->render('index', []);
->>>>>>> 8ff6719403463995b4f387f9f7efc93670bf77bc
     });
     $router->get('/regions/@id', function($id) use($app){
         $region = RegionController::getRegionById($id);
