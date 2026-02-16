@@ -53,6 +53,34 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($data);
     });
 
+    $router->get('/villes', function() use($app){
+    $villes = VilleController::getVilles();
+    $stats = VilleController::getVilleStats();
+    
+    // Organiser les stats par ville
+    $ville_stats = [];
+    
+    // Si $stats est un tableau indexé
+    if(isset($stats[0]) && is_array($stats[0])) {
+        foreach($stats as $stat) {
+            $ville_id = $stat['ville_id'] ?? $stat['id'] ?? null;
+            if($ville_id) {
+                $ville_stats[$ville_id] = $stat;
+            }
+        }
+    } 
+    // Si $stats est déjà un tableau associatif
+    else {
+        $ville_stats = $stats;
+    }
+    
+    $app->render('villes', [
+        "villes" => $villes,
+        "ville_stats" => $ville_stats,
+        "total_villes" => count($villes)
+    ]);
+});
+
     
 
     // API pour dashboard complet
