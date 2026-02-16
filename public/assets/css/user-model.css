@@ -1,0 +1,179 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+    --primary-color: #2c539e;
+    --primary-dark: #1e3d7a;
+    --secondary-color: #ffcc00;
+    --light-color: #f5f7fa;
+    --dark-color: #333;
+    --gray-color: #666;
+    --light-gray: #eee;
+    --border-color: #ddd;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+}
+
+body {
+    background-color: var(--light-color);
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+/* ================= HEADER FIXE ================= */
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: white;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    z-index: 1000;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    font-size: 26px;
+    color: var(--secondary-color);
+}
+
+.site-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.site-title span {
+    color: var(--secondary-color);
+}
+
+/* User menu */
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+/* Dropdown profil */
+.profile-dropdown {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: #fff;
+    color: #333;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    min-width: 160px;
+    display: none;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.profile-dropdown.show {
+    display: block;
+    animation: dropdownFade 0.2s ease-out;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background: #f2f2f2;
+}
+
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= SIDEBAR GAUCHE ================= */
+.sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 230px;
+    height: calc(100vh - 70px);
+    background: white;
+    border-right: 1px solid var(--light-gray);
+    padding-top: 20px;
+}
+
+.sidebar-nav {
+    list-style: none;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--gray-color);
+    transition: all 0.2s;
+}
+
+.sidebar-item i {
+    font-size: 18px;
+}
+
+.sidebar-item:hover {
+    background: rgba(44, 83, 158, 0.05);
+    color: var(--primary-color);
+}
+
+.sidebar-item.active {
+    background: rgba(44, 83, 158, 0.1);
+    color: var(--primary-color);
+    border-right: 4px solid var(--primary-color);
+}
+
+/* ================= ZONE PRINCIPALE ================= */
+.main-content {
+    margin-top: 70px;
+    margin-left: 230px;
+    min-height: calc(100vh - 70px);
+    background: var(--light-color);
+    padding: 30px;
+}

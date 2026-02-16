@@ -1,0 +1,114 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+.container {
+    text-align: center;
+    padding: 40px;
+}
+
+.container h1 {
+    font-size: 120px;
+    margin-bottom: 10px;
+}
+
+.container h2 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.container p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: #fff;
+    color: #2a5298;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #e6e6e6;
+}
+
+/* Animation d’apparition */
+.container {
+    animation: fadeIn 1.2s ease-out forwards;
+}
+
+/* Animation du 404 */
+.container h1 {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Animation du texte */
+.container h2,
+.container p,
+.container .btn {
+    opacity: 0;
+    animation: slideUp 0.8s ease-out forwards;
+}
+
+.container h2 { animation-delay: 0.3s; }
+.container p  { animation-delay: 0.5s; }
+.container .btn { animation-delay: 0.7s; }
+
+/* Effet hover bouton */
+.btn:hover {
+    background: #e6e6e6;
+    transform: scale(1.05);
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,78 @@
+TODO LIST (BNGRC): 
+    - Technologie : PHPflight, Mysql
+    - Base : DATABASE(BNGRC)
+    - Dispatch :
+        - Base :
+            - Table : 
+                - BNGRC_region(id, name)
+                - BNGRC_ville(id, name, idRegion)
+                - BNGRC_typeDon(id, name)
+                - BNGRC_article(id, name, idType, prix_unitaire)
+                - BNGRC_besoin(id, idVille, idArticle, quantite, date_de_saisie)
+                - BNGRC_don(id, idArticle, quantite, date_de_saisie)
+
+        - Model :
+            - regionModel:
+                - addRegion(name)
+                - findAll()
+                - findById(id)
+            - villeModel :
+                - addVille(name)
+                - findAll()
+                - findById(id)
+                - findAllBesoin()
+                - findAllDon()
+                - findVilleRegion()
+                - findAllVilleInfo()
+            - typeDonModel :
+                - addType(name)
+                - findAll()
+                - findById(id)
+            - articleModel :
+                - addArticle(name, idType, prix_unitaire)
+                - findAll()
+                - findById()
+            - besoinModel :
+                - addBesoin(idVille, idArticle, quantite, date_de_saisie)
+                - findAll()
+                - findById(id)
+                - findAllBesoinInfo()
+            - donModel :
+                - addDon(idArticle, quantite, date_de_saisie)
+                - findAll()
+                - findById()
+                - findAllDonInfo()
+        - Controller : 
+            - regionController : Model(regionModel)
+                - addRegion(name)
+                - getAll()
+                - getById(id)
+            - villeController : villeModel
+                - addVille(name)
+                - getAll()
+                - getById(id)
+                - getAllBesoin()
+                - getAllDon()
+                - getVilleRegion()
+                - getAllVilleInfo()
+            - typeDonController : Model(TypeDonModel)
+                - addType(name)
+                - getAll()
+                - getById(id)
+            - articleController : Model(articleModel)
+                - addArticle(name, idType, prix_unitaire)
+                - getAll()
+                - getById()
+            - besoinController : Model(besoinModel)
+                - addBesoin(idVille, idArticle, quantite, date_de_saisie)
+                - getAll()
+                - getById(id)
+                - getAllBesoinInfo()
+            - donController : Model(donModel)
+                - addDon(idArticle, quantite, date_de_saisie)
+                - getAll()
+                - getById()
+                - getAllDonInfo()
+        - Frontend :
+            - Integration :
+                - 
