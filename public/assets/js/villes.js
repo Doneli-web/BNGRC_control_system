@@ -83,3 +83,4 @@ function formatMoney(amount) {
 window.filterVilles = filterVilles;
 window.sortVilles = sortVilles;
 window.formatMoney = formatMoney;
+
