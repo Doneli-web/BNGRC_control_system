@@ -2,6 +2,7 @@
 
 use app\controllers\VilleController;
 use app\controllers\RegionController;
+use app\controllers\TypeDonController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -30,6 +31,13 @@ $router->group('/', function(Router $router) use ($app) {
         RegionController::addRegion($RegionName);
         $app->render('villes', [
             "message"=>"Region added successfully"
+        ]);
+    });
+
+    $router->get('/besoins', function() use($app){
+        $typeDon = TypeDonController::findAll();
+        $app->render('besoins', [
+            "typeDon" => $typeDon
         ]);
     });
 
