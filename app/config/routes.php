@@ -56,10 +56,12 @@ $router->group('/', function(Router $router) use ($app) {
         $typeDon = TypeDonController::findAll();
         $articles = ArticleController::findAll();
         $villes = VilleController::getVilles();
+        $besoins = BesoinController::findAllBesoinInfo();
         $app->render('besoins', [
             "typeDon" => $typeDon,
             "articles" => $articles,
-            "villes" => $villes
+            "villes" => $villes,
+            "besoins" => $besoins
         ]);
     });
 
@@ -94,7 +96,26 @@ $router->group('/', function(Router $router) use ($app) {
         "ville_stats" => $ville_stats,
         "total_villes" => count($villes)
     ]);
+
+    
+   
 });
+
+     $router->get('/villes/detail/@id', function($id) use($app){
+        $data = VilleController::getDetailVille($id);
+        
+        if($data === null) {
+            $app->render('404', []);
+            return;
+        }
+        
+        $app->render('ville_detail', [
+            "ville" => $data['ville'],
+            "besoins" => $data['besoins'],
+            "dons" => $data['dons'],
+            "stats" => [] 
+        ]);
+    });
 
     
 
