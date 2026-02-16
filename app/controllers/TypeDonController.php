@@ -11,4 +11,9 @@ class TypeDonController{
         $typeDonModel = new TypeDonModel(Flight::db());
         return $typeDonModel->getAll();
     }
+
+    public static function findById($id){
+        $typeDonModel = new TypeDonModel(Flight::db());
+        return $typeDonModel->getById($id);
+    }
 }
