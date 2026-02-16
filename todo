@@ -1,0 +1,171 @@
+TODO LIST (BNGRC)
+
+Technologie : PHPflight, Mysql
+👤 Itokiana (setup projet)
+
+Base : DATABASE(BNGRC)
+
+🧱 BASE DE DONNÉES (COMMUN)
+
+👥 Tous (design ensemble 1h)
+Implémentation SQL : Doneli
+
+BNGRC_region(id, name)
+
+BNGRC_ville(id, name, idRegion)
+
+BNGRC_typeDon(id, name)
+
+BNGRC_article(id, name, idType, prix_unitaire)
+
+BNGRC_besoin(id, idVille, idArticle, quantite, date_de_saisie)
+
+BNGRC_don(id, idArticle, quantite, date_de_saisie)
+
+BNGRC_dispatch(id, idDon, idBesoin, quantite_attribuee, date_dispatch)
+
+🧩 RÉPARTITION PAR MODULE (ÉQUILIBRÉE)
+👨‍💻 DONELI — MODULE BESOINS + DISPATCH (LOGIQUE CORE)
+Models
+
+besoinModel
+
+addBesoin(...)
+
+findAll()
+
+findById()
+
+findAllBesoinInfo()
+
+getBesoinRestant()
+
+dispatchModel
+
+addDispatch(...)
+
+findAll()
+
+findByVille()
+
+findDashboardData()
+
+Controllers
+
+besoinController
+
+addBesoin(...)
+
+getAll()
+
+getById()
+
+getAllBesoinInfo()
+
+dispatchController
+
+simulate() 🔥
+
+getAll()
+
+getDashboard()
+
+Frontend
+
+Page ajout besoins
+
+Liste besoins
+
+Bouton simulation dispatch
+
+Logique affichage résultat dispatch
+
+👨‍💻 ITOKIANA — MODULE DONS + INFRASTRUCTURE API
+Setup technique
+
+Installation PHPFlight
+
+Routing global
+
+Structure projet
+
+Models
+
+donModel
+
+addDon(...)
+
+findAll()
+
+findById()
+
+findAllDonInfo()
+
+getDonRestant()
+
+Controllers
+
+donController
+
+addDon(...)
+
+getAll()
+
+getById()
+
+getAllDonInfo()
+
+Backend transversal
+
+Gestion JSON responses
+
+Middleware erreurs
+
+Liaison API
+
+Frontend
+
+Page ajout dons
+
+Liste dons
+
+Intégration API fetch
+
+👨‍💻 BRANDON — MODULE RÉFÉRENTIELS + DASHBOARD
+Models
+
+regionModel
+
+villeModel
+
+typeDonModel
+
+articleModel
+
+(plus simples donc équilibré)
+
+Controllers
+
+regionController
+
+villeController
+
+typeDonController
+
+articleController
+
+Frontend (UI principale)
+
+Template global (navbar, layout)
+
+Dashboard principal 🔥
+
+Besoins vs dons par ville
+
+CRUD régions
+
+CRUD villes
+
+CRUD articles
+
+CSS / UI design
