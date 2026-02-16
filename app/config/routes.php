@@ -41,6 +41,18 @@ $router->group('/', function(Router $router) use ($app) {
         ]);
     });
 
+    $router->get('/villes/stats', function() {
+        $data = VilleController::getVilleStats();
+        Flight::json($data);
+    });
+
+    // API pour dashboard complet
+    $router->get('/dashboard', function() {
+        $data = VilleController::getDashboard();
+        Flight::json($data);
+    });
+
+
     $router->get('/*', function() use($app){
         $app->render('404', []);
     });

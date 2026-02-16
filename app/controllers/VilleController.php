@@ -25,6 +25,13 @@ class VilleController{
 
     public static function getVilleStats(){
         $VilleModel = new VilleModel(Flight::db());
-        $VilleModel->findVilleStatistics();
+        return $VilleModel->findVilleStatistics();
     }
+
+    public static function getDashboard(){
+        $model = new VilleModel(Flight::db());
+        return $model->getDashboardData();
+    }
+
+
 }
