@@ -33,5 +33,22 @@ class VilleController{
         return $model->getDashboardData();
     }
 
+    
+
+    public static function getBesoinsByVille($idVille) {
+        $VilleModel = new VilleModel(Flight::db());
+        return $VilleModel->getBesoinsByVille($idVille);
+    }
+
+    public static function getDonsByVille($idVille) {
+        $VilleModel = new VilleModel(Flight::db());
+        return $VilleModel->getDonsByVille($idVille);
+    }
+
+    public static function getDetailVille($idVille) {
+        $VilleModel = new VilleModel(Flight::db());
+        return $VilleModel->getDetailVille($idVille);
+    }
+
 
 }
