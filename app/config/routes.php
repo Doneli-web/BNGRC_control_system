@@ -20,7 +20,22 @@ $router->group('/', function(Router $router) use ($app) {
 
     // $router->get('/', [ UserController::class, 'getTrajets' ]);
     $router->get('/', function() use($app){
-        $app->render('index', []);
+        // Fournir la vue avec quelques métriques basiques provenant de la BD
+        $db = Flight::db();
+        $stmt = $db->query("SELECT COUNT(*) FROM BNGRC_ville");
+        $totalVilles = (int)$stmt->fetchColumn();
+        $stmt2 = $db->query("SELECT COUNT(*) FROM BNGRC_don");
+        $totalDons = (int)$stmt2->fetchColumn();
+
+        $app->render('index', [
+            'total_villes' => $totalVilles,
+            'total_dons' => $totalDons
+        ]);
+    });
+
+    // Route pour lancer la simulation côté serveur
+    $router->post('/simulate', function() use($app){
+        \app\controllers\DispatchController::simulate();
     });
     $router->get('/regions/@id', function($id) use($app){
         $region = RegionController::getRegionById($id);
@@ -127,8 +142,23 @@ $router->group('/', function(Router $router) use ($app) {
         $app->redirect('/besoins');
     });
 
-    $router->get('/*', function() use($app){
-        $app->render('404', []);
+    $router->get('/', function() use($app){
+        // Fournir la vue avec quelques métriques basiques provenant de la BD
+        $db = Flight::db();
+        $stmt = $db->query("SELECT COUNT(*) FROM BNGRC_ville");
+        $totalVilles = (int)$stmt->fetchColumn();
+        $stmt2 = $db->query("SELECT COUNT(*) FROM BNGRC_don");
+        $totalDons = (int)$stmt2->fetchColumn();
+
+        $app->render('index', [
+            'total_villes' => $totalVilles,
+            'total_dons' => $totalDons
+        ]);
+    });
+
+    // Route pour lancer la simulation côté serveur
+    $router->post('/simulate', function() use($app){
+        \app\controllers\DispatchController::simulate();
     });
 
    

@@ -87,7 +87,7 @@
                         </svg>
                         Exporter
                     </button>
-                    <button class="btn-primary" onclick="window.location.href='/simulation'">
+                    <button class="btn-primary" onclick="startSimulation()" id="btnStart">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <polygon points="5 3 19 12 5 21 5 3"/>
                         </svg>
@@ -222,7 +222,7 @@
                         <h4>Navigation</h4>
                         <a href="index.html">Tableau de bord</a>
                         <a href="besoins.html">Gestion des besoins</a>
-                        <a href="dons.html">Gestion des dons</a>
+                        <a href="/dons">Gestion des dons</a>
                     </div>
                     <div class="link-group">
                         <h4>Ressources</h4>
@@ -239,5 +239,6 @@
     </footer>
 
     <script src="/assets/js/script.js"></script>
+    <script src="/assets/js/simulation.js"></script>
 </body>
 </html>

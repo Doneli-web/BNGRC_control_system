@@ -1,122 +1,28 @@
-// ===================================
-// BNGRC - Simulation Script
-// ===================================
+// Minimal client-side simulation trigger: call server /simulate and reload page
+function startSimulation(){
+    const btn = document.getElementById('btnStart');
+    if(btn) btn.disabled = true;
 
-let simulationResults = [];
-let simulationRunning = false;
-
-// Initialize page
-document.addEventListener('DOMContentLoaded', function() {
-    initNavigation();
-    checkDataAvailability();
-});
-
-// Navigation
-function initNavigation() {
-    const navToggle = document.getElementById('navToggle');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
+    fetch('/simulate', { method: 'POST' })
+        .then(res => res.json())
+        .then(json => {
+            if(json && json.status === 'ok'){
+                alert('Simulation terminée — ' + (json.inserted || 0) + ' dispatch(s) inséré(s)');
+                // reload to reflect DB changes
+                window.location.reload();
+            } else {
+                alert('Simulation terminée avec erreurs');
+                console.error(json);
+                if(btn) btn.disabled = false;
+            }
+        })
+        .catch(err => {
+            alert('Erreur lors de la simulation');
+            console.error(err);
+            if(btn) btn.disabled = false;
         });
-    }
 }
 
-// Check if data is available
-function checkDataAvailability() {
-    const besoins = JSON.parse(localStorage.getItem('besoins')) || [];
-    const dons = JSON.parse(localStorage.getItem('dons')) || [];
-    
-    if (besoins.length === 0 || dons.length === 0) {
-        updateStatus('Attention', 'Veuillez d\'abord enregistrer des besoins et des dons avant de lancer la simulation', 'warning');
-        document.getElementById('btnStart').disabled = true;
-    } else {
-        addLog(`Données chargées: ${besoins.length} besoins, ${dons.length} dons`, 'info');
-    }
-}
-
-// Start simulation
-async function startSimulation() {
-    if (simulationRunning) return;
-    
-    simulationRunning = true;
-    document.getElementById('btnStart').disabled = true;
-    document.getElementById('btnReset').disabled = true;
-    document.getElementById('btnExport').disabled = true;
-    
-    updateStatus('Simulation en cours...', 'Traitement des données', 'info');
-    clearLog();
-    
-    // Step 1: Load data
-    await simulateStep(1, 'Chargement des données');
-    const besoins = JSON.parse(localStorage.getItem('besoins')) || [];
-    const dons = JSON.parse(localStorage.getItem('dons')) || [];
-    addLog(`Chargé: ${besoins.length} besoins et ${dons.length} dons`, 'success');
-    await delay(800);
-    
-    // Step 2: Sort and prepare
-    await simulateStep(2, 'Tri des dons par date');
-    const sortedDons = sortDonsByDate(dons);
-    addLog(`Dons triés par ordre chronologique`, 'success');
-    await delay(800);
-    
-    // Step 3: Group by city
-    await simulateStep(3, 'Regroupement des besoins par ville');
-    const besoinsParVille = groupBesoinsParVille(besoins);
-    addLog(`Besoins regroupés pour ${Object.keys(besoinsParVille).length} villes`, 'success');
-    await delay(800);
-    
-    // Step 4: Distribution
-    await simulateStep(4, 'Distribution des dons');
-    const results = distribueDons(sortedDons, besoinsParVille);
-    simulationResults = results;
-    addLog(`Distribution complétée`, 'success');
-    await delay(800);
-    
-    // Step 5: Finalize
-    await simulateStep(5, 'Génération des résultats');
-    await delay(500);
-    
-    displayResults(results);
-    displayStatistics(results, sortedDons, besoins);
-    
-    updateStatus('Simulation terminée', 'Distribution effectuée avec succès', 'success');
-    document.getElementById('btnReset').disabled = false;
-    document.getElementById('btnExport').disabled = false;
-    
-    addLog('='.repeat(50), 'info');
-    addLog('SIMULATION TERMINÉE', 'success');
-    
-    simulationRunning = false;
-}
-
-// Sort dons by date
-function sortDonsByDate(dons) {
-    return [...dons].sort((a, b) => {
-        const dateA = new Date(a.dateReception);
-        const dateB = new Date(b.dateReception);
-        return dateA - dateB;
-    });
-}
-
-// Group besoins par ville
-function groupBesoinsParVille(besoins) {
-    const grouped = {};
-    
-    besoins.forEach(besoin => {
-        if (!grouped[besoin.ville]) {
-            grouped[besoin.ville] = [];
-        }
-        grouped[besoin.ville].push({
-            ...besoin,
-            quantiteRestante: besoin.quantite,
-            montantRestant: besoin.montantTotal
-        });
-    });
-    
-    return grouped;
-}
 
 // Distribute dons
 function distribueDons(dons, besoinsParVille) {
