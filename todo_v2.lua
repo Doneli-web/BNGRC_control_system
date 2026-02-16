@@ -45,14 +45,14 @@ DESCRIPTION:
     ----------
     Fichier: app/models/AchatModel.php
         - class AchatModel
-        - __construct($db)
-        - addAchat($idDon, $idBesoin, $montant, $frais)
-        - findAll()
-        - findById($id)
-        - findAchatsByDon($idDon)
-        - findAchatsByBesoin($idBesoin)
-        - getTotalAchatsParVille($idVille)
-        - getAchatsFiltresParVille($idVille)
+        - __construct($db) (OK)
+        - add($idDon, $idBesoin, $montant_utilise, $frais_pourcentage, $frais_montant, $montant_total) (OK)
+        - getAll() (OK)
+        - getById($id) (OK)
+        - findAchatsByDon($idDon) (OK)
+        - findAchatsByBesoin($idBesoin) (OK)
+        - getTotalAchatsParVille($idVille) (OK)
+        - getAchatsFiltresParVille($idVille) (OK)
     
     Fichier: app/models/ConfigModel.php
         - class ConfigModel
