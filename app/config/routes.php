@@ -288,8 +288,6 @@ $router->group('/', function(Router $router) use ($app) {
         ]);
     });
 
-<<<<<<< HEAD
-=======
     $router->get('/api/recap', function() use($app){
         $db = Flight::db();
         $besoinModel = new \app\models\BesoinModel($db);
@@ -301,7 +299,6 @@ $router->group('/', function(Router $router) use ($app) {
         ]);
     });
 
->>>>>>> 646ffe46d02e69b8b65f2105e5620ecd8843907e
     $router->get('/*', function() use($app){
         $app->render('404', []);
     });
