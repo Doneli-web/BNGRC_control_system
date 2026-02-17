@@ -105,7 +105,7 @@ async function validateSimulation() {
     addLog('[VALIDATE] Mode validation activé', 'success');
 
     try {
-        const response = await fetch(`/api/dispatch/simulate`, { method: 'POST' });
+        const response = await fetch(`/api/dispatch/simulatePage`, { method: 'POST' });
         if (!response.ok) throw new Error('Erreur serveur');
         const result = await response.json();
 
@@ -218,7 +218,7 @@ function displayStatistics(stats) {
     statsGrid.innerHTML = '';
 
     const statsArray = [
-        { icon: '📊', label: 'Attributions créées', value: stats.attributions_crees || 0 },
+        { icon: '📊', label: 'Attributions créées', value: stats.attributions_creees || 0 },
         { icon: '📦', label: 'Dons utilisés', value: `${stats.dons_utilises || 0} / ${stats.total_dons || 0}` },
         { icon: '🏘️', label: 'Villes servies', value: stats.villes_servies || 0 },
         { icon: '📈', label: 'Taux de couverture', value: stats.taux_couverture_besoins || 'N/A' }

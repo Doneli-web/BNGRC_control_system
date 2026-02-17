@@ -32,9 +32,8 @@ $router->group('/', function(Router $router) use ($app) {
         ]);
     });
 
-    // Route pour lancer la simulation côté serveur
-    $router->post('/simulate', function() use($app){
-        \app\controllers\DispatchController::simulate();
+    $router->post('/simulate', callback: function() use($app){
+        DispatchController::simulate();
     });
 
     $router->get('/besoins', function() use($app){
@@ -107,9 +106,6 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/simulation', function() use($app){
         $app->render('simulation', []);
     });
-    $router->post('/simulate', callback: function() use($app){
-        DispatchController::simulate();
-    });
         // API pour simulation par page : besoins, dons, dispatchs
     $router->get('/api/dispatch/besoins', function() {
         $besoins = BesoinController::findAll();
@@ -119,16 +115,10 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/api/dispatch/villes', function() {
         $villes = VilleController::getVilles();
         Flight::json(['villes' => $villes]);
-});
-
-    $router->get('/api/dispatch/dons', function() {
-        $dons = DonController::getAll();
-        Flight::json($dons);
     });
 
-    $router->get('/api/dispatch/dispatchs', function() {
-        $db = Flight::db();
-        $dispatchs = $db->query("SELECT * FROM BNGRC_dispatch ORDER BY date_dispatch ASC, id ASC")->fetchAll(PDO::FETCH_ASSOC);
+    $router->post('/api/dispatch/dispatchs', function() {
+        $dispatchs = DispatchController::getDispatchs();
         Flight::json($dispatchs);
     });
 
@@ -136,7 +126,7 @@ $router->group('/', function(Router $router) use ($app) {
         DispatchController::preview();
     });
 
-    $router->post('/api/dispatch/simulate', function() {
+    $router->post('/api/dispatch/simulatePage', function() {
         DispatchController::simulatePage();
     });
 

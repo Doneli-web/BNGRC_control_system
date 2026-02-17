@@ -9,6 +9,12 @@ use PDO;
 
 class DispatchController {
 
+
+    public static function getDispatchs(){
+        $db = Flight::db();
+        $dispatchs = $db->query("SELECT * FROM BNGRC_dispatch ORDER BY date_dispatch ASC, id ASC")->fetchAll(PDO::FETCH_ASSOC);
+        return $dispatchs;
+    }
     public static function simulate(){
         $db = Flight::db();
         $dispatchModel = new DispatchModel($db);
@@ -85,34 +91,38 @@ class DispatchController {
     }
 
     public static function preview(){
-        $db = Flight::db();
-        $model = new DispatchModel($db);
-        Flight::json([
-            'status' => 'ok',
-            ...$model->preview()
-        ]);
+        try {
+            $model = new DispatchModel();
+            $result = $model->preview();
+
+            Flight::json([
+                'status' => 'ok',
+                'data' => $result['data'],
+                'statistics' => $result['statistics']
+            ]);
+        } catch (\Exception $e) {
+            Flight::json(['status'=>'error','message'=>$e->getMessage()],500);
+        }
     }
 
     public static function simulatePage(){
         $db = Flight::db();
-        $model = new DispatchModel($db);
+        $db->beginTransaction();
 
         try {
-            $db->beginTransaction();
+            $model = new DispatchModel($db);
             $result = $model->execute();
+
             $db->commit();
 
             Flight::json([
                 'status' => 'ok',
-                ...$result
+                'data' => $result['data'],
+                'statistics' => $result['statistics']
             ]);
-
-        } catch(\Exception $e){
+        } catch (\Exception $e) {
             $db->rollBack();
-            Flight::json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
+            Flight::json(['status'=>'error','message'=>$e->getMessage()],500);
         }
     }
 }
