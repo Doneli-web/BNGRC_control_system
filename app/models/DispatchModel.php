@@ -5,6 +5,142 @@ use Flight;
 use PDO;
 
 class DispatchModel {
+
+        // Dispatch par plus petite quantité demandée (besoin)
+        public function previewSmallest(): array {
+            return $this->runSmallest(false);
+        }
+        public function executeSmallest(): array {
+            return $this->runSmallest(true);
+        }
+        private function runSmallest(bool $persist): array {
+            $dons = $this->getDonDisponible();
+            $besoins = $this->getBesoinNonComble();
+            // Trie les besoins par quantité croissante
+            usort($besoins, function($a, $b) {
+                return $a['quantite'] <=> $b['quantite'];
+            });
+            $dispatchs = [];
+            $inserted = 0;
+            $don_utilises = 0;
+            $besoinRemaining = [];
+            foreach ($besoins as $b) {
+                $besoinRemaining[$b['id']] = (int)$b['quantite'];
+            }
+            foreach ($dons as $don) {
+                $donQty = (int)$don['quantite'];
+                if ($donQty <= 0) continue;
+                foreach ($besoins as $b) {
+                    if ($donQty <= 0) break;
+                    if ($b['idArticle'] != $don['idArticle']) continue;
+                    $needId = $b['id'];
+                    $needRem = $besoinRemaining[$needId];
+                    if ($needRem <= 0) continue;
+                    $alloc = min($donQty, $needRem);
+                    if ($alloc <= 0) continue;
+                    $dispatchs[] = [
+                        'idDon' => $don['id'],
+                        'idBesoin' => $needId,
+                        'idArticle' => $don['idArticle'],
+                        'quantite' => $alloc
+                    ];
+                    if ($persist) {
+                        $this->persistDispatch($don['id'], $needId, $alloc);
+                    }
+                    $donQty -= $alloc;
+                    $don_utilises += $alloc;
+                    $besoinRemaining[$needId] -= $alloc;
+                    $inserted++;
+                }
+            }
+            $total_besoins = array_sum(array_column($besoins, 'quantite'));
+            $total_attribue = array_sum(array_column($dispatchs, 'quantite'));
+            $taux = $total_besoins ? round(($total_attribue / $total_besoins) * 100) : 0;
+            return [
+                'data' => $dispatchs,
+                'statistics' => [
+                    'attributions_creees' => $inserted,
+                    'dons_utilises' => $don_utilises,
+                    'total_dons' => count($dons),
+                    'total_besoins' => count($besoins),
+                    'taux_couverture_besoins' => $taux
+                ]
+            ];
+        }
+
+        // Dispatch proportionnel (entier) par ville
+        public function previewProportional(): array {
+            return $this->runProportional(false);
+        }
+        public function executeProportional(): array {
+            return $this->runProportional(true);
+        }
+        private function runProportional(bool $persist): array {
+            $dons = $this->getDonDisponible();
+            $besoins = $this->getBesoinNonComble();
+            // Regroupe les besoins par ville et article
+            $besoinsByVilleArticle = [];
+            $totalByVilleArticle = [];
+            foreach ($besoins as $b) {
+                $besoinsByVilleArticle[$b['idVille']][$b['idArticle']][] = $b;
+                if (!isset($totalByVilleArticle[$b['idArticle']])) $totalByVilleArticle[$b['idArticle']] = 0;
+                $totalByVilleArticle[$b['idArticle']] += (int)$b['quantite'];
+            }
+            $dispatchs = [];
+            $inserted = 0;
+            $don_utilises = 0;
+            foreach ($dons as $don) {
+                $donQty = (int)$don['quantite'];
+                if ($donQty <= 0) continue;
+                $articleId = $don['idArticle'];
+                $totalBesoin = $totalByVilleArticle[$articleId] ?? 0;
+                if ($totalBesoin <= 0) continue;
+                // Pour chaque ville qui a un besoin de cet article
+                foreach ($besoinsByVilleArticle as $idVille => $besoinsVille) {
+                    if (!isset($besoinsVille[$articleId])) continue;
+                    $villeBesoin = 0;
+                    foreach ($besoinsVille[$articleId] as $b) {
+                        $villeBesoin += (int)$b['quantite'];
+                    }
+                    // Calcul proportionnel entier
+                    $allocVille = (int) floor($villeBesoin * $donQty / $totalBesoin);
+                    if ($allocVille <= 0) continue;
+                    // Répartit l'allocation de la ville sur ses besoins (ordre de date)
+                    foreach ($besoinsVille[$articleId] as $b) {
+                        if ($allocVille <= 0) break;
+                        $needId = $b['id'];
+                        $needQty = (int)$b['quantite'];
+                        $alloc = min($allocVille, $needQty);
+                        if ($alloc <= 0) continue;
+                        $dispatchs[] = [
+                            'idDon' => $don['id'],
+                            'idBesoin' => $needId,
+                            'idArticle' => $articleId,
+                            'quantite' => $alloc
+                        ];
+                        if ($persist) {
+                            $this->persistDispatch($don['id'], $needId, $alloc);
+                        }
+                        $allocVille -= $alloc;
+                        $don_utilises += $alloc;
+                        $inserted++;
+                    }
+                }
+            }
+            $total_besoins = array_sum(array_column($besoins, 'quantite'));
+            $total_attribue = array_sum(array_column($dispatchs, 'quantite'));
+            $taux = $total_besoins ? round(($total_attribue / $total_besoins) * 100) : 0;
+            return [
+                'data' => $dispatchs,
+                'statistics' => [
+                    'attributions_creees' => $inserted,
+                    'dons_utilises' => $don_utilises,
+                    'total_dons' => count($dons),
+                    'total_besoins' => count($besoins),
+                    'taux_couverture_besoins' => $taux
+                ]
+            ];
+        }
     private $db;
 
     public function __construct($db = null){

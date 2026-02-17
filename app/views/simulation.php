@@ -169,6 +169,11 @@
                 </div>
                 
                 <div class="sim-controls">
+                                        <select id="dispatchStrategy" style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #ccc;">
+                                            <option value="default">Date la plus ancienne (par défaut)</option>
+                                            <option value="smallest">Plus petite quantité demandée</option>
+                                            <option value="proportional">Répartition proportionnelle</option>
+                                        </select>
                     <button class="btn-secondary" onclick="previewSimulation()" id="btnPreview">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>

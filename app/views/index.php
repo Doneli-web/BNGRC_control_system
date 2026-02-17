@@ -84,6 +84,11 @@
                     </select>
                 </div>
                 <div class="action-buttons">
+                                        <select id="dispatchStrategyIndex" style="padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #ccc;">
+                                            <option value="default">Date la plus ancienne (par défaut)</option>
+                                            <option value="smallest">Plus petite quantité demandée</option>
+                                            <option value="proportional">Répartition proportionnelle</option>
+                                        </select>
                     <button class="btn-secondary" onclick="exportData()">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>

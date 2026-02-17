@@ -113,7 +113,7 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($besoins);
     });
 
-    $router->get('/api/dispatch/villes', function() {
+    $router->get('/api/dispatch/villes', function(): void {
         $villes = VilleController::getVilles();
         Flight::json(['villes' => $villes]);
     });
@@ -123,12 +123,29 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($dispatchs);
     });
 
+
    $router->post('/api/dispatch/preview', function() {
         DispatchController::preview();
     });
 
     $router->post('/api/dispatch/simulatePage', function() {
         DispatchController::simulatePage();
+    });
+
+    // Dispatch preview (smallest)
+    $router->post('/api/dispatch/previewSmallest', function() {
+        DispatchController::previewSmallest();
+    });
+    $router->post('/api/dispatch/simulatePageSmallest', function() {
+        DispatchController::simulatePageSmallest();
+    });
+
+    // Dispatch preview (proportional)
+    $router->post('/api/dispatch/previewProportional', function() {
+        DispatchController::previewProportional();
+    });
+    $router->post('/api/dispatch/simulatePageProportional', function() {
+        DispatchController::simulatePageProportional();
     });
 
 

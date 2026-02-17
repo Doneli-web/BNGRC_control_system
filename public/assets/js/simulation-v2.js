@@ -61,7 +61,19 @@ async function previewSimulation() {
     addLog('[PREVIEW] Mode prévisualisation activé', 'info');
 
     try {
-        const response = await fetch(`/api/dispatch/preview`, { method: 'POST' });
+        let strategy = document.getElementById('dispatchStrategy')?.value;
+        // Si la page a été appelée avec ?strategy=... on synchronise le select
+        if (!strategy) {
+            const params = new URLSearchParams(window.location.search);
+            strategy = params.get('strategy') || 'default';
+            if (document.getElementById('dispatchStrategy')) {
+                document.getElementById('dispatchStrategy').value = strategy;
+            }
+        }
+        let endpoint = '/api/dispatch/preview';
+        if (strategy === 'smallest') endpoint = '/api/dispatch/previewSmallest';
+        if (strategy === 'proportional') endpoint = '/api/dispatch/previewProportional';
+        const response = await fetch(endpoint, { method: 'POST' });
         if (!response.ok) throw new Error('Erreur serveur');
         const result = await response.json();
 
@@ -105,7 +117,15 @@ async function validateSimulation() {
     addLog('[VALIDATE] Mode validation activé', 'success');
 
     try {
-        const response = await fetch(`/api/dispatch/simulatePage`, { method: 'POST' });
+        let strategy = document.getElementById('dispatchStrategy')?.value;
+        if (!strategy) {
+            const params = new URLSearchParams(window.location.search);
+            strategy = params.get('strategy') || 'default';
+        }
+        let endpoint = '/api/dispatch/simulatePage';
+        if (strategy === 'smallest') endpoint = '/api/dispatch/simulatePageSmallest';
+        if (strategy === 'proportional') endpoint = '/api/dispatch/simulatePageProportional';
+        const response = await fetch(endpoint, { method: 'POST' });
         if (!response.ok) throw new Error('Erreur serveur');
         const result = await response.json();
 

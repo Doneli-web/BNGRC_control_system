@@ -9,6 +9,70 @@ use PDO;
 
 class DispatchController {
 
+    // Dispatch par plus petite quantité demandée
+    public static function previewSmallest(){
+        try {
+            $model = new DispatchModel();
+            $result = $model->previewSmallest();
+            Flight::json([
+                'status' => 'ok',
+                'data' => $result['data'],
+                'statistics' => $result['statistics']
+            ]);
+        } catch (\Exception $e) {
+            Flight::json(['status'=>'error','message'=>$e->getMessage()],500);
+        }
+    }
+    public static function simulatePageSmallest(){
+        $db = Flight::db();
+        $db->beginTransaction();
+        try {
+            $model = new DispatchModel($db);
+            $result = $model->executeSmallest();
+            $db->commit();
+            Flight::json([
+                'status' => 'ok',
+                'data' => $result['data'],
+                'statistics' => $result['statistics']
+            ]);
+        } catch (\Exception $e) {
+            $db->rollBack();
+            Flight::json(['status'=>'error','message'=>$e->getMessage()],500);
+        }
+    }
+
+    // Dispatch proportionnel (entier)
+    public static function previewProportional(){
+        try {
+            $model = new DispatchModel();
+            $result = $model->previewProportional();
+            Flight::json([
+                'status' => 'ok',
+                'data' => $result['data'],
+                'statistics' => $result['statistics']
+            ]);
+        } catch (\Exception $e) {
+            Flight::json(['status'=>'error','message'=>$e->getMessage()],500);
+        }
+    }
+    public static function simulatePageProportional(){
+        $db = Flight::db();
+        $db->beginTransaction();
+        try {
+            $model = new DispatchModel($db);
+            $result = $model->executeProportional();
+            $db->commit();
+            Flight::json([
+                'status' => 'ok',
+                'data' => $result['data'],
+                'statistics' => $result['statistics']
+            ]);
+        } catch (\Exception $e) {
+            $db->rollBack();
+            Flight::json(['status'=>'error','message'=>$e->getMessage()],500);
+        }
+    }
+
 
     public static function getDispatchs(){
         $db = Flight::db();

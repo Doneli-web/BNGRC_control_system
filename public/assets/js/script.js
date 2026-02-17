@@ -1,3 +1,8 @@
+// Redirige vers la page simulation avec la stratégie choisie
+function startSimulation() {
+    const strategy = document.getElementById('dispatchStrategyIndex')?.value || 'default';
+    window.location.href = '/simulation' + (strategy !== 'default' ? ('?strategy=' + strategy) : '');
+}
 // ===================================
 // BNGRC - Dashboard Script
 // ===================================
