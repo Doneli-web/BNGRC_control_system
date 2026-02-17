@@ -131,12 +131,13 @@ $router->group('/', function(Router $router) use ($app) {
 
     $router->post('/api/dispatch/simulate', function() {
         $db = Flight::db();
+        $dispatchModel = new DispatchModel($db);
+        $dispatchModel = new DispatchModel($db);
         $count = $db->query("SELECT COUNT(*) FROM BNGRC_dispatch")->fetchColumn();
         if($count > 0){
             Flight::json(['status'=>'error','message'=>'Simulation déjà effectuée'], 400);
             return;
         }
-        $dispatchModel = new DispatchModel($db);
 
         try {
             $db->beginTransaction();
@@ -144,16 +145,13 @@ $router->group('/', function(Router $router) use ($app) {
             $db->commit();
 
             // Retourner un résumé
-            $data = $dispatchModel->simulateDispatch();
-
             Flight::json([
                 'status' => 'ok',
-                'data' => $data,
+                'data' => [],
                 'statistics' => [
-                    'attributions_creees' => count($data)
+                    'attributions_creees' => $inserted
                 ]
             ]);
-
         } catch(\Exception $e) {
             $db->rollBack();
             Flight::json([
@@ -240,15 +238,6 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/api/articles/by-type/@idType', function($idType) use ($app){
         $articles = ArticleController::findByType($idType);
         Flight::json($articles);
-    });
-
-    $router->get('/api/recap', function() use($app){
-        $totalBesoin = floatval(BesoinController::getTotalBesoinPrice());
-        $totalSatisfait = BesoinController::getMontantSatisfait();
-        Flight::json([
-            'totalBesoin' => $totalBesoin,
-            'totalSatisfait' => $totalSatisfait
-        ]);
     });
 
        $router->get('/dons', function() use($app){
@@ -366,15 +355,6 @@ $router->group('/', function(Router $router) use ($app) {
         }
         
         Flight::redirect('/achats');
-    });
-
-    $router->get('/recapitulatif', function() use ($app){
-        $totalBesoin = floatval(BesoinController::getTotalBesoinPrice());
-        $totalSatisfait = BesoinController::getMontantSatisfait();
-        $app->render('recapitulatif',[
-            "totalBesoin" => $totalBesoin,
-            "totalMontantSatisfait" => $totalSatisfait
-        ]);
     });
 
     $router->get('/*', function() use($app){

@@ -37,20 +37,18 @@ class DispatchModel {
         $dons = $this->getDonDisponible();
 
         $inserted = 0;
-        $besoinRemaining = [];
 
+        $besoinRemaining = [];
         foreach($besoins as $b){
             $besoinRemaining[$b['id']] = (int)$b['quantite'];
         }
 
         foreach($dons as $don){
             $donQty = (int)$don['quantite'];
-            $donUsed = 0;
             if($donQty <= 0) continue;
 
             foreach($besoins as $b){
                 if((int)$b['idArticle'] !== (int)$don['idArticle']) continue;
-
                 $needId = $b['id'];
                 $needRem = $besoinRemaining[$needId] ?? 0;
                 if($needRem <= 0) continue;
@@ -58,31 +56,22 @@ class DispatchModel {
                 $alloc = min($donQty, $needRem);
                 if($alloc <= 0) continue;
 
-                // INSERT réel
-                $this->insert($don['id'], $needId, $alloc);
-
                 $inserted++;
 
+                // Simuler l'insertion
+                // echo "Simulating dispatch: Don {$don['id']} -> Besoin {$needId} | Alloc: {$alloc}\n";
+
                 $donQty -= $alloc;
-                $donUsed += $alloc;
                 $besoinRemaining[$needId] -= $alloc;
 
                 if($donQty <= 0) break;
             }
+            foreach($besoinRemaining as $id => $remaining){
+                $status = $remaining <= 0 ? 'comble' : 'non_comble';
 
-            // Update status don
-            $status = 'non_utilise';
-            if($donUsed == (int)$don['quantite']) $status = 'utilise';
-            elseif($donUsed > 0) $status = 'en_cours';
-
-            $this->db->prepare("UPDATE BNGRC_don SET status=? WHERE id=?")
-                    ->execute([$status, $don['id']]);
-        }
-        foreach($besoinRemaining as $id => $remaining){
-            $status = $remaining <= 0 ? 'comble' : 'non_comble';
-
-            $this->db->prepare("UPDATE BNGRC_besoin SET status=? WHERE id=?")
-                    ->execute([$status, $id]);
+                $this->db->prepare("UPDATE BNGRC_besoin SET status=? WHERE id=?")
+                        ->execute([$status, $id]);
+            }
         }
 
         return $inserted;

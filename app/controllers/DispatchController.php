@@ -74,16 +74,8 @@ class DispatchController {
             // Retourner un résumé
             Flight::json([
                 'status' => 'ok',
-<<<<<<< HEAD
-                'data' => [],
-                'inserted' => $inserted,
-                'statistics' => [
-                    'attributions_creees' => $inserted
-                ]
-=======
                 'inserted' => $inserted,
                 'montant_satisfait' => $montantSatisfait
->>>>>>> 9d72703d032c4ef8d3a2e524cf4c7dc913246c56
             ]);
 
         } catch(\Exception $e){
