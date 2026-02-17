@@ -24,7 +24,7 @@ class DispatchModel {
     }
 
     public function insert($idDon, $idBesoin, $quantite, $dateDispatch = null){
-        $stmt = $this->db->prepare("INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite, date_dispatch) VALUES (?, ?, ?, ?)");
+        $stmt = $this->db->prepare("INSERT INTO BNGRC_dispatch (idDon, idBesoin, quantite_attribuee, date_dispatch) VALUES (?, ?, ?, ?)");
         $dt = $dateDispatch ?: date('Y-m-d H:i:s');
         $stmt->execute([$idDon, $idBesoin, $quantite, $dt]);
         return $this->db->lastInsertId();
