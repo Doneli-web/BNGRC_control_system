@@ -2,7 +2,7 @@
 // BNGRC - Simulation V2 Script
 // ===================================
 
-const API_BASE_URL = 'http://localhost:8000/api';
+const API_BASE_URL = '';
 
 let simulationResults = null;
 let simulationMode = null; // 'preview' ou 'validate'
@@ -27,15 +27,26 @@ function initNavigation() {
 }
 
 // Check data availability
-function checkDataAvailability() {
-    const besoins = JSON.parse(localStorage.getItem('besoins')) || [];
-    const dons = JSON.parse(localStorage.getItem('dons')) || [];
-    
-    if (besoins.length === 0 || dons.length === 0) {
-        updateStatus('⚠️ Attention', 'Veuillez enregistrer des besoins et des dons avant la simulation', 'warning');
+async function checkDataAvailability() {
+    // Vérifie s'il y a des besoins et dons en base
+    try {
+        const res = await fetch(`/api/dispatch/simulatePreview`, { method: 'POST' });
+        if (res.ok) {
+            const result = await res.json();
+            if ((result.statistics && result.statistics.attributions_creees > 0) || (result.data && result.data.length > 0)) {
+                addLog(`[INFO] Données chargées depuis la base`, 'info');
+                document.getElementById('btnPreview').disabled = false;
+            } else {
+                updateStatus('⚠️ Attention', 'Aucun besoin ou don disponible en base', 'warning');
+                document.getElementById('btnPreview').disabled = true;
+            }
+        } else {
+            updateStatus('⚠️ Erreur serveur', 'Impossible de charger les données', 'warning');
+            document.getElementById('btnPreview').disabled = true;
+        }
+    } catch (e) {
+        updateStatus('⚠️ Erreur', 'Impossible de charger les données', 'warning');
         document.getElementById('btnPreview').disabled = true;
-    } else {
-        addLog(`[INFO] ${besoins.length} besoins et ${dons.length} dons chargés`, 'info');
     }
 }
 
@@ -60,9 +71,7 @@ async function previewSimulation() {
     
     try {
         // Appel API en mode preview
-        const response = await fetch(`${API_BASE_URL}/dispatch/simulate?mode=preview`, {
-            method: 'POST'
-        });
+        const response = await fetch(`/api/dispatch/simulatePreview`, { method: 'POST' });
         
         if (response.ok) {
             const result = await response.json();
@@ -88,18 +97,7 @@ async function previewSimulation() {
     } catch (error) {
         addLog('[ERROR] Erreur: ' + error.message, 'error');
         
-        // Fallback: simulation locale
-        addLog('[INFO] Utilisation de la simulation locale', 'info');
-        const localResults = runLocalSimulation();
-        simulationResults = localResults;
-        
-        displayResults(localResults, 'preview');
-        displayStatistics(localResults.statistics);
-        
-        document.getElementById('btnValidate').disabled = false;
-        updateStatus('✅ Prévisualisation terminée (mode local)', 
-            'Vérifiez les résultats. Cliquez sur "Valider" pour enregistrer.', 
-            'success');
+        updateStatus('Erreur lors de la prévisualisation', error.message, 'error');
     }
     
     simulationRunning = false;
@@ -134,7 +132,7 @@ async function validateSimulation() {
     
     try {
         // Appel API en mode validate
-        const response = await fetch(`${API_BASE_URL}/dispatch/simulate`, {
+        const response = await fetch(`/api/dispatch/simulate`, {
             method: 'POST'
         });
         
@@ -154,7 +152,7 @@ async function validateSimulation() {
             // Proposer d'aller au récapitulatif
             setTimeout(() => {
                 if (confirm('Voulez-vous consulter le récapitulatif complet ?')) {
-                    window.location.href = 'recapitulatif.html';
+                    window.location.href = '/recapitulatif';
                 }
             }, 2000);
             
@@ -165,108 +163,13 @@ async function validateSimulation() {
     } catch (error) {
         addLog('[ERROR] Erreur: ' + error.message, 'error');
         
-        // Fallback: enregistrement local
-        addLog('[INFO] Enregistrement local des résultats', 'warning');
-        localStorage.setItem('dispatchResults', JSON.stringify(simulationResults));
-        
-        addLog('[SUCCESS] Résultats sauvegardés localement', 'success');
-        updateStatus('✅ Validation terminée (mode local)', 
-            'Les résultats ont été enregistrés. Consultez le récapitulatif.', 
-            'success');
-    }
-    
-    simulationRunning = false;
-    document.getElementById('btnReset').disabled = false;
-}
-
-// ==========================================
-// LOCAL SIMULATION (Fallback)
-// ==========================================
-
-function runLocalSimulation() {
-    const besoins = JSON.parse(localStorage.getItem('besoins')) || [];
-    const dons = JSON.parse(localStorage.getItem('dons')) || [];
-    const achats = JSON.parse(localStorage.getItem('achats')) || [];
-    
-    // Combiner dons normaux + achats (convertis en dons)
-    const tousLesDons = [...dons];
-    
-    achats.forEach(achat => {
-        tousLesDons.push({
-            id: 'achat_' + achat.id,
-            article: achat.article,
-            quantite: achat.quantite,
-            date_de_saisie: achat.date,
-            source: 'achat'
-        });
-    });
-    
-    // Trier par date
-    tousLesDons.sort((a, b) => new Date(a.date_de_saisie) - new Date(b.date_de_saisie));
-    
-    // Grouper besoins par ville
-    const besoinsParVille = {};
-    besoins.forEach(b => {
-        if (!besoinsParVille[b.ville]) {
-            besoinsParVille[b.ville] = [];
-        }
-        besoinsParVille[b.ville].push({
-            ...b,
-            quantiteRestante: b.quantite
-        });
-    });
-    
-    // Algorithme de dispatch
-    const results = {};
-    let totalAttributions = 0;
-    
-    Object.keys(besoinsParVille).forEach(ville => {
-        results[ville] = {
-            besoins: besoinsParVille[ville],
-            attributions: [],
-            totalAttribue: 0,
-            totalBesoin: besoinsParVille[ville].reduce((sum, b) => sum + b.montantTotal, 0)
-        };
-    });
-    
-    tousLesDons.forEach((don, index) => {
-        let donQtyRestante = don.quantite;
-        
-        addLog(`[PROCESS] Don #${index + 1}: ${don.quantite} ${don.article}`, 'info');
-        
-        Object.keys(results).forEach(ville => {
-            results[ville].besoins.forEach(besoin => {
-                if (donQtyRestante <= 0) return;
-                if (besoin.article !== don.article) return;
-                if (besoin.quantiteRestante <= 0) return;
-                
-                const qtyAttribuee = Math.min(donQtyRestante, besoin.quantiteRestante);
-                const montantAttribue = qtyAttribuee * besoin.prixUnitaire;
-                
-                results[ville].attributions.push({
-                    article: don.article,
-                    quantite: qtyAttribuee,
-                    montant: montantAttribue,
-                    source: don.source || 'don'
-                });
-                
-                results[ville].totalAttribue += montantAttribue;
-                besoin.quantiteRestante -= qtyAttribuee;
-                donQtyRestante -= qtyAttribuee;
-                totalAttributions++;
-                
-                addLog(`  → ${qtyAttribuee} attribués à ${ville}`, 'success');
-            });
-        });
-    });
-    
-    return {
-        success: true,
-        data: results,
+        updateStatus('Erreur lors de la validation', error.message, 'error');
+    // Suppression du fallback localStorage : tout vient de l'API
+        data: results;
         statistics: {
-            attributions_creees: totalAttributions,
-            dons_utilises: tousLesDons.length,
-            total_dons: tousLesDons.length,
+            attributions_creees: totalAttributions;
+            dons_utilises: tousLesDons.length;
+            total_dons: tousLesDons.length;
             villes_servies: Object.keys(results).length
         }
     };
@@ -276,14 +179,14 @@ function runLocalSimulation() {
 // DISPLAY FUNCTIONS
 // ==========================================
 
-function displayResults(results, mode) {
+async function displayResults(results, mode) {
     const resultsPanel = document.getElementById('resultsPanel');
     const resultsGrid = document.getElementById('resultsGrid');
     const modeBadge = document.getElementById('modeBadge');
-    
+
     resultsPanel.style.display = 'block';
     resultsGrid.innerHTML = '';
-    
+
     if (mode === 'preview') {
         modeBadge.className = 'mode-badge preview';
         modeBadge.textContent = '👁️ Prévisualisation';
@@ -291,48 +194,68 @@ function displayResults(results, mode) {
         modeBadge.className = 'mode-badge final';
         modeBadge.textContent = '✅ Validé';
     }
-    
-    const data = results.data || results;
-    
-    Object.keys(data).forEach((ville, index) => {
-        const cityData = data[ville];
-        const tauxCouverture = cityData.totalBesoin > 0 
-            ? Math.round((cityData.totalAttribue / cityData.totalBesoin) * 100) 
-            : 0;
-        
-        const card = document.createElement('div');
-        card.className = 'result-card';
-        card.style.animationDelay = `${index * 0.1}s`;
-        
-        card.innerHTML = `
-            <h4>${ville}</h4>
-            <div style="margin: 1rem 0;">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>Besoin total:</span>
-                    <strong>${formatMoney(cityData.totalBesoin)} Ar</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                    <span>Attribué:</span>
-                    <strong style="color: var(--success)">${formatMoney(cityData.totalAttribue)} Ar</strong>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span>Reste:</span>
-                    <strong style="color: ${cityData.totalBesoin - cityData.totalAttribue > 0 ? 'var(--danger)' : 'var(--success)'}">
-                        ${formatMoney(cityData.totalBesoin - cityData.totalAttribue)} Ar
-                    </strong>
-                </div>
-            </div>
-            <div class="progress-bar" style="margin-top: 1rem;">
-                <div class="progress-fill ${tauxCouverture === 100 ? 'complete' : ''}" 
-                     style="width: ${tauxCouverture}%"></div>
-            </div>
-            <div style="text-align: center; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
-                ${tauxCouverture}% couvert (${cityData.attributions.length} attribution${cityData.attributions.length > 1 ? 's' : ''})
-            </div>
-        `;
-        
-        resultsGrid.appendChild(card);
+
+    // Fetch all cities for name mapping
+    const villesList = await fetch('/api/dispatch/villes').then(r => r.json()).then(data => data.villes || []);
+    const villesMap = {};
+    villesList.forEach(v => {
+        villesMap[v.id] = v.name;
     });
+
+    // Regrouper les attributions par ville
+    const attributions = results.data || [];
+    let villes = {};
+    // Charger les besoins pour info
+    const besoins = await fetch('/api/dispatch/besoins').then(r => r.json());
+        besoins.forEach(b => {
+            if (!villes[b.idVille]) villes[b.idVille] = { totalBesoin: 0, totalAttribue: 0, attributions: [] };
+            villes[b.idVille].totalBesoin += b.quantite * 1; // quantité
+        });
+        attributions.forEach(attr => {
+            // Trouver la ville du besoin
+            const besoin = besoins.find(b => b.id == attr.idBesoin);
+            if (besoin) {
+                villes[besoin.idVille].totalAttribue += attr.quantite * 1;
+                villes[besoin.idVille].attributions.push(attr);
+            }
+        });
+        Object.keys(villes).forEach((villeId, index) => {
+            const cityData = villes[villeId];
+            const tauxCouverture = cityData.totalBesoin > 0
+                ? Math.round((cityData.totalAttribue / cityData.totalBesoin) * 100)
+                : 0;
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            const villeName = villesMap[villeId];
+            card.innerHTML = `
+                <h4>${villeName}</h4>
+                <div style="margin: 1rem 0;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Besoin total:</span>
+                        <strong>${formatMoney(cityData.totalBesoin)} Ar</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span>Attribué:</span>
+                        <strong style="color: var(--success)">${formatMoney(cityData.totalAttribue)} Ar</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Reste:</span>
+                        <strong style="color: ${cityData.totalBesoin - cityData.totalAttribue > 0 ? 'var(--danger)' : 'var(--success)'}">
+                            ${formatMoney(cityData.totalBesoin - cityData.totalAttribue)} Ar
+                        </strong>
+                    </div>
+                </div>
+                <div class="progress-bar" style="margin-top: 1rem;">
+                    <div class="progress-fill ${tauxCouverture === 100 ? 'complete' : ''}" 
+                         style="width: ${tauxCouverture}%"></div>
+                </div>
+                <div style="text-align: center; margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-muted);">
+                    ${tauxCouverture}% couvert (${cityData.attributions.length} attribution${cityData.attributions.length > 1 ? 's' : ''})
+                </div>
+            `;
+            resultsGrid.appendChild(card);
+        });
 }
 
 function displayStatistics(stats) {

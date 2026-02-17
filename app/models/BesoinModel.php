@@ -18,7 +18,7 @@ class BesoinModel{
     }
 
     public function findAll(){
-        $stmt = $this->db->prepare("SELECT * name FROM BNGRC_besoin");
+        $stmt = $this->db->prepare("SELECT * FROM BNGRC_besoin");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

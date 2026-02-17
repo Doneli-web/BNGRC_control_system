@@ -128,12 +128,12 @@
                 <span class="brand-text">BNGRC<span class="brand-sub">Gestion des Dons</span></span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html">Tableau de bord</a></li>
-                <li><a href="besoins.html">Besoins</a></li>
-                <li><a href="dons.html">Dons</a></li>
-                <li><a href="achats.html">Achats</a></li>
-                <li><a href="simulation.html" class="active">Simulation</a></li>
-                <li><a href="recapitulatif.html">Récapitulatif</a></li>
+                <li><a href="/">Tableau de bord</a></li>
+                <li><a href="/besoins">Besoins</a></li>
+                <li><a href="/dons">Dons</a></li>
+                <li><a href="/achats">Achats</a></li>
+                <li><a href="/simulation" class="active">Simulation</a></li>
+                <li><a href="/recapitulatif">Récapitulatif</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span>
