@@ -1329,3 +1329,28 @@ a:hover {
         font-size: 1.5rem;
     }
 }
+
+
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    white-space: nowrap;
+}
+
+.btn-danger:hover {
+    background: #a23529;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
