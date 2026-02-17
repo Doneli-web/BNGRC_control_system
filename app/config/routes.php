@@ -6,6 +6,7 @@ use app\controllers\DonController;
 use app\controllers\TypeDonController;
 use app\controllers\ArticleController;
 use app\controllers\BesoinController;
+use app\controllers\ResetController;
 use app\controllers\AchatController;
 use app\controllers\ConfigController;
 use \app\controllers\DispatchController;
@@ -304,6 +305,16 @@ $router->group('/', function(Router $router) use ($app) {
             'totalSatisfait' => $totalSatisfait
         ]);
     });
+
+    
+
+    
+    $router->get('/reset-complet', function() {
+        ResetController::reset();
+    });
+
+    
+    
 
     $router->get('/*', function() use($app){
         $app->render('404', []);
