@@ -270,11 +270,19 @@ $router->group('/', function(Router $router) use ($app) {
 
     $router->get('/achats', function() use($app){
         AchatController::showAchatsPage($app);
+    
     });
 
-    $router->post('/achats/frais/update', function() use($app){
-        ConfigController::updateFraisAchat();
-        $_SESSION['success'] = "Frais mis à jour avec succès";
+     $router->post('/achats/frais/update', function() {
+        $frais = $_POST["frais"] ?? null;
+        
+        if($frais && is_numeric($frais) && $frais >= 0 && $frais <= 100) {
+            ConfigController::updateFraisAchat($frais);
+            $_SESSION['success'] = "Frais mis à jour";
+        } else {
+            $_SESSION['error'] = "Frais invalide";
+        }
+        
         Flight::redirect('/achats');
     });
 
@@ -332,11 +340,19 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::redirect('/achats');
     });
 
-    $router->get('/achats/ville/@id', function($id) use($app){
-        
-        $app->render('achats', [
-            "ville_id" => $id
-        ]);
+    
+    $router->get('/achats/ville/@id', function($id) {
+        header('Content-Type: application/json');
+        $data = AchatController::getAchatsByVille($id);
+        echo json_encode(["success" => true, "data" => $data]);
+        exit;
+    });
+
+    $router->get('/achats/liste', function() {
+        header('Content-Type: application/json');
+        $data = AchatController::getAllAchats();
+        echo json_encode(["success" => true, "data" => $data]);
+        exit;
     });
 
     $router->get('/config/frais', function() {
@@ -344,18 +360,8 @@ $router->group('/', function(Router $router) use ($app) {
         echo json_encode(["success" => true, "data" => $frais]);
     });
 
-    $router->post('/config/frais/update', function() use($app) {
-        $frais = $_POST["frais"] ?? null;
-        
-        if($frais && is_numeric($frais) && $frais >= 0 && $frais <= 100) {
-            ConfigController::updateFraisAchat($frais);
-            $_SESSION['success'] = "Frais mis à jour avec succès";
-        } else {
-            $_SESSION['error'] = "Frais invalide";
-        }
-        
-        Flight::redirect('/achats');
-    });
+   
+   
 
     $router->get('/*', function() use($app){
         $app->render('404', []);

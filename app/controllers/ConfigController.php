@@ -7,19 +7,10 @@ use Flight;
 
 class ConfigController {
 
-    public static function getConfig($cle) {
-        $ConfigModel = new ConfigModel(Flight::db());
-        return $ConfigModel->getConfig($cle);
-    }
-
-    public static function updateConfig($cle, $valeur) {
-        $ConfigModel = new ConfigModel(Flight::db());
-        return $ConfigModel->updateConfig($cle, $valeur);
-    }
-
     public static function getFraisAchat() {
         $ConfigModel = new ConfigModel(Flight::db());
-        return $ConfigModel->getFraisAchat();
+        $frais = $ConfigModel->getFraisAchat();
+        return $frais;
     }
 
     public static function updateFraisAchat($frais) {
@@ -27,18 +18,13 @@ class ConfigController {
         return $ConfigModel->updateFraisAchat($frais);
     }
 
+    public static function getConfig($cle) {
+        $ConfigModel = new ConfigModel(Flight::db());
+        return $ConfigModel->getConfig($cle);
+    }
+
     public static function getAllConfig() {
         $ConfigModel = new ConfigModel(Flight::db());
         return $ConfigModel->getAllConfig();
-    }
-
-    public static function addConfig($cle, $valeur, $description = '') {
-        $ConfigModel = new ConfigModel(Flight::db());
-        return $ConfigModel->addConfig($cle, $valeur, $description);
-    }
-
-    public static function deleteConfig($cle) {
-        $ConfigModel = new ConfigModel(Flight::db());
-        return $ConfigModel->deleteConfig($cle);
     }
 }

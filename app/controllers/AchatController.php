@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\AchatModel;
 use app\models\ConfigModel;
+use app\controllers\VilleController;
 use app\models\DonModel;
 use app\models\BesoinModel;
 use app\models\ArticleModel;
@@ -17,8 +18,20 @@ class AchatController {
     }
 
     public static function getAllAchats() {
-        $AchatModel = new AchatModel(Flight::db());
-        return $AchatModel->getAll();
+        $db = Flight::db();
+        $stmt = $db->query("
+            SELECT 
+                a.*, 
+                v.name as ville_nom,
+                d.idArticle,
+                b.idVille
+            FROM BNGRC_achat a
+            JOIN BNGRC_besoin b ON a.idBesoin = b.id
+            JOIN BNGRC_ville v ON b.idVille = v.id
+            LEFT JOIN BNGRC_don d ON a.idDon = d.id
+            ORDER BY a.date_achat DESC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getAchatById($id) {
@@ -195,30 +208,58 @@ class AchatController {
     }
 
     public static function getHistoriqueAchats() {
-        $AchatModel = new AchatModel(Flight::db());
-        return $AchatModel->getAll();
+        $db = Flight::db();
+        $stmt = $db->query("
+            SELECT 
+                a.*, 
+                v.name as ville_nom
+            FROM BNGRC_achat a
+            JOIN BNGRC_besoin b ON a.idBesoin = b.id
+            JOIN BNGRC_ville v ON b.idVille = v.id
+            ORDER BY a.date_achat DESC
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getAchatsByVille($idVille) {
-        $AchatModel = new AchatModel(Flight::db());
-        return $AchatModel->getAchatsFiltresParVille($idVille);
+        $db = Flight::db();
+        $stmt = $db->prepare("
+            SELECT 
+                a.*, 
+                v.name as ville_nom,
+                v.id as ville_id
+            FROM BNGRC_achat a
+            JOIN BNGRC_besoin b ON a.idBesoin = b.id
+            JOIN BNGRC_ville v ON b.idVille = v.id
+            WHERE b.idVille = ?
+            ORDER BY a.date_achat DESC
+        ");
+        $stmt->execute([$idVille]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function showAchatsPage($app){
         $AchatModel = new AchatModel(Flight::db());
-        $ConfigModel = new ConfigModel(Flight::db()); 
+        $ConfigModel = new ConfigModel(Flight::db());
         
-        $achats = $AchatModel->getAll();
+        
+        $achats = self::getAllAchats(); 
+        
         $dons_argent = $AchatModel->getDonsArgentRestants();
         $besoins = $AchatModel->getBesoinsRestantsNatureMateriaux();
         $frais = $ConfigModel->getFraisAchat();
+        $ville = VilleController::getVilles();
+        
+        
+       
         
         $app->render('achats', [
             "achats" => $achats,
             "dons_argent" => $dons_argent,
             "besoins" => $besoins,
-            "frais" => $frais, // Passer la variable à la vue
-            "total_achats" => count($achats)
+            "frais" => $frais,
+            "total_achats" => count($achats),
+            "villes" => $ville
         ]);
     }
 

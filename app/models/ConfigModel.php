@@ -24,13 +24,18 @@ class ConfigModel {
         return $stmt->execute([$valeur, $cle]);
     }
 
-    public function getFraisAchat() {
-        return $this->getConfig('frais_achat');
+      public function getFraisAchat() {
+        $stmt = $this->db->prepare("SELECT valeur FROM BNGRC_config WHERE cle = 'frais_achat'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['valeur'] : 10;
     }
 
     public function updateFraisAchat($frais) {
-        return $this->updateConfig('frais_achat', $frais);
+        $stmt = $this->db->prepare("UPDATE BNGRC_config SET valeur = ? WHERE cle = 'frais_achat'");
+        return $stmt->execute([$frais]);
     }
+    
 
     public function getAllConfig() {
         $stmt = $this->db->query("SELECT * FROM BNGRC_config");

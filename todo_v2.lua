@@ -56,27 +56,27 @@ DESCRIPTION:
     
     Fichier: app/models/ConfigModel.php
         - class ConfigModel
-        - __construct($db)
-        - getConfig($cle)
-        - updateConfig($cle, $valeur)
-        - getFraisAchat()
+        - __construct($db) (OK)
+        - getConfig($cle) (OK)
+        - updateConfig($cle, $valeur) (OK)
+        - getFraisAchat() (OK)
 
 2. CONTROLLERS:
     ----------
     Fichier: app/controllers/AchatController.php
         - class AchatController
-        - getDonsArgentRestants()
-        - getBesoinsRestantsNatureMateriaux()
-        - calculerAchat()
-        - validerAchat()
-        - getHistoriqueAchats()
-        - getTotalAchatsParVille($idVille)
-        - getAchatsParVille($idVille)
+        - getDonsArgentRestants() (OK)
+        - getBesoinsRestantsNatureMateriaux() (OK)
+        - calculerAchat() (OK)
+        - validerAchat() (OK)
+        - getHistoriqueAchats() (OK)
+        - getTotalAchatsParVille($idVille) (OK)
+        - getAchatsParVille($idVille) (OK)
     
     Fichier: app/controllers/ConfigController.php
         - class ConfigController
-        - getFraisAchat()
-        - updateFraisAchat()
+        - getFraisAchat() (OK)
+        - updateFraisAchat($frais) (OK)
 
 3. ROUTES:
     ----------
