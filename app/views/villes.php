@@ -5,32 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Villes - BNGRC</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/styles3.css">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        .stats-mini-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .stat-mini-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-        }
-        .stat-mini-card .number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            font-family: var(--font-display);
-        }
-        .stat-mini-card .label {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-    </style>
+  
 </head>
 <body>
     <!-- Navigation -->
@@ -50,7 +27,7 @@
                 <li><a href="/besoins">Besoins</a></li>
                 <li><a href="/dons">Dons</a></li>
                 <li><a href="/villes" class="active">Villes</a></li>
-                <li><a href="/achats" class="active">Achats</a></li>
+                <li><a href="/achats">Achats</a></li>
                 <li><a href="/simulation">Simulation</a></li>
                 <li><a href="/recapitulatif">Récapitulatif</a></li>
             </ul>

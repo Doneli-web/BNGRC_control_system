@@ -57,9 +57,34 @@ class VilleModel{
     }
     
     public function findVilleStatistics(){
-        $stmt = $this->db->prepare("SELECT BNGRC_ville.name AS ville_name, COUNT(BNGRC_besoin.id) AS total_besoins FROM BNGRC_ville LEFT JOIN BNGRC_besoin ON BNGRC_ville.id = BNGRC_besoin.idVille GROUP BY BNGRC_ville.id");
+        $stmt = $this->db->prepare("
+            SELECT 
+                v.id AS ville_id,
+                v.name AS ville_nom,
+                COUNT(b.id) AS total_besoins,
+                COALESCE(SUM(b.quantite * a.prix_unitaire), 0) AS montant_total,
+                COALESCE((
+                    SELECT SUM(disp.quantite_attribuee * a2.prix_unitaire)
+                    FROM BNGRC_dispatch disp
+                    JOIN BNGRC_besoin b2 ON disp.idBesoin = b2.id
+                    JOIN BNGRC_article a2 ON b2.idArticle = a2.id
+                    WHERE b2.idVille = v.id
+                ), 0) AS montant_recu
+            FROM BNGRC_ville v
+            LEFT JOIN BNGRC_besoin b ON v.id = b.idVille
+            LEFT JOIN BNGRC_article a ON b.idArticle = a.id
+            GROUP BY v.id, v.name
+        ");
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        
+        $stats = [];
+        foreach($results as $row) {
+            $stats[$row['ville_id']] = $row;
+        }
+        
+        return $stats; 
     }
 
     public function getDashboardData(){

@@ -59,24 +59,26 @@ $router->group('/', function(Router $router) use ($app) {
         $villes = VilleController::getVilles();
         $stats = VilleController::getVilleStats();
         
-        $ville_stats = [];
         
-        if(isset($stats[0]) && is_array($stats[0])) {
-            foreach($stats as $stat) {
-                $ville_id = $stat['ville_id'] ?? $stat['id'] ?? null;
-                if($ville_id) {
-                    $ville_stats[$ville_id] = $stat;
-                }
+        $total_besoins = 0;
+        $villes_urgentes = 0;
+        
+        foreach($stats as $stat) {
+            $total_besoins += $stat['total_besoins'] ?? 0;
+            if(($stat['montant_recu'] ?? 0) < (($stat['montant_total'] ?? 0) * 0.3)) {
+                $villes_urgentes++;
             }
-        } 
-        else {
-            $ville_stats = $stats;
         }
+        
+        $total_regions = count(array_unique(array_column($villes, 'idRegion')));
         
         $app->render('villes', [
             "villes" => $villes,
-            "ville_stats" => $ville_stats,
-            "total_villes" => count($villes)
+            "ville_stats" => $stats,
+            "total_villes" => count($villes),
+            "total_regions" => $total_regions,
+            "total_besoins" => $total_besoins,
+            "villes_urgentes" => $villes_urgentes
         ]);
     });
 
