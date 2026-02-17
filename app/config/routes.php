@@ -117,12 +117,9 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($articles);
     });
 
-    // API recap: total besoins and total satisfaits (montant)
     $router->get('/api/recap', function() use($app){
-        $db = Flight::db();
-        $besoinModel = new \app\models\BesoinModel($db);
-        $totalBesoin = (float)$besoinModel->getTotalPrice();
-        $totalSatisfait = (float)$besoinModel->getMontantSatisfait();
+        $totalBesoin = floatval(BesoinController::getTotalBesoinPrice());
+        $totalSatisfait = BesoinController::getMontantSatisfait();
         Flight::json([
             'totalBesoin' => $totalBesoin,
             'totalSatisfait' => $totalSatisfait
