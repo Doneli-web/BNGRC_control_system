@@ -77,7 +77,7 @@ class DispatchModel {
                     'idDon' => $don['id'],
                     'idBesoin' => $needId,
                     'idArticle' => $don['idArticle'],
-                    'quantite' => $alloc
+                    'quantite_attribuee' => $alloc
                 ];
 
                 if($persist){
@@ -119,7 +119,7 @@ class DispatchModel {
     private function persistDispatch(array $don, array $besoin, int $qty): void {
         // INSERT dispatch
         $stmt = $this->db->prepare("
-            INSERT INTO BNGRC_dispatch(idDon, idBesoin, quantite, date_dispatch)
+            INSERT INTO BNGRC_dispatch(idDon, idBesoin, quantite_attribuee, date_dispatch)
             VALUES (?, ?, ?, NOW())
         ");
         $stmt->execute([$don['id'], $besoin['id'], $qty]);
