@@ -26,7 +26,7 @@
                 <li><a href="/dons">Dons</a></li>
                 <li><a href="/achats">Achats</a></li>
                 <li><a href="/villes">Villes</a></li>
-                <li><a href="/achats" class="active">Achats</a></li>
+                <li><a href="/achats">Achats</a></li>
                 <li><a href="/simulation">Simulation</a></li>
                 <li><a href="/recapitulatif">Récapitulatif</a></li>
             </ul>
@@ -95,6 +95,13 @@
                             <polygon points="5 3 19 12 5 21 5 3"/>
                         </svg>
                         Lancer simulation
+                    </button>
+                      <button class="btn-danger" onclick="resetComplet()" style="background: #a23529; color: white;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <polyline points="1 4 1 10 7 10"/>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                        </svg>
+                        Reinitialiser
                     </button>
                 </div>
             </div>
