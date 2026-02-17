@@ -43,5 +43,22 @@ class BesoinModel{
             ":id"=>$id
         ]);
     }
+
+    public function getTotalPrice(){
+        $stmt = $this->db->prepare("SELECT SUM(BNGRC_article.prix_unitaire * BNGRC_besoin.quantite) AS total FROM BNGRC_besoin JOIN BNGRC_article ON BNGRC_besoin.idArticle = BNGRC_article.id");
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+
+    public function getMontantSatisfait(){
+        $sql = "SELECT COALESCE(SUM(disp.quantite_attribuee * a.prix_unitaire), 0) AS total_satisfait
+                FROM BNGRC_dispatch disp
+                JOIN BNGRC_don don ON disp.idDon = don.id
+                JOIN BNGRC_article a ON don.idArticle = a.id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $res = $stmt->fetch(PDO::FETCH_ASSOC);
+        return isset($res['total_satisfait']) ? (float)$res['total_satisfait'] : 0.0;
+    }
 }
 
