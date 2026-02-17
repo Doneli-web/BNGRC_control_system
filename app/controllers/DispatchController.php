@@ -84,55 +84,35 @@ class DispatchController {
         }
     }
 
-    public static function simulatePreview(){
+    public static function preview(){
         $db = Flight::db();
-        $dispatchModel = new DispatchModel($db);
-
-        // Simulation incrémentale
-        $besoins = $dispatchModel->getBesoinNonComble();
-        $dons = $dispatchModel->getDonDisponible();
-
-        $besoinRemaining = [];
-        foreach($besoins as $b){
-            $besoinRemaining[$b['id']] = (int)$b['quantite'];
-        }
-
-        $previewDispatches = [];
-
-        foreach($dons as $don){
-            $donQty = (int)$don['quantite'];
-            if($donQty <= 0) continue;
-
-            foreach($besoins as $b){
-                if((int)$b['idArticle'] !== (int)$don['idArticle']) continue;
-                $needId = $b['id'];
-                $needRem = $besoinRemaining[$needId] ?? 0;
-                if($needRem <= 0) continue;
-
-                $alloc = min($donQty, $needRem);
-                if($alloc <= 0) continue;
-
-                // Simuler l'insertion
-                $previewDispatches[] = [
-                    'idDon' => $don['id'],
-                    'idBesoin' => $needId,
-                    'quantite_attribuee' => $alloc,
-                    'date_dispatch' => date('Y-m-d H:i:s')
-                ];
-
-                $donQty -= $alloc;
-                $besoinRemaining[$needId] -= $alloc;
-
-                if($donQty <= 0) break;
-            }
-        }
-
+        $model = new DispatchModel($db);
         Flight::json([
             'status' => 'ok',
-            'data' => $previewDispatches,
-            'statistics' => [
-                'attributions_creees' => count($previewDispatches)
-            ]
+            ...$model->preview()
         ]);
+    }
+
+    public static function simulatePage(){
+        $db = Flight::db();
+        $model = new DispatchModel($db);
+
+        try {
+            $db->beginTransaction();
+            $result = $model->execute();
+            $db->commit();
+
+            Flight::json([
+                'status' => 'ok',
+                ...$result
+            ]);
+
+        } catch(\Exception $e){
+            $db->rollBack();
+            Flight::json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

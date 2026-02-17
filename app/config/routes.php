@@ -8,7 +8,7 @@ use app\controllers\ArticleController;
 use app\controllers\BesoinController;
 use app\controllers\AchatController;
 use app\controllers\ConfigController;
-use app\models\DispatchModel;
+use \app\controllers\DispatchController;
 use app\middlewares\SecurityHeadersMiddleware;
 use flight\Engine;
 use flight\net\Router;
@@ -107,6 +107,9 @@ $router->group('/', function(Router $router) use ($app) {
     $router->get('/simulation', function() use($app){
         $app->render('simulation', []);
     });
+    $router->post('/simulate', callback: function() use($app){
+        DispatchController::simulate();
+    });
         // API pour simulation par page : besoins, dons, dispatchs
     $router->get('/api/dispatch/besoins', function() {
         $besoins = BesoinController::findAll();
@@ -129,104 +132,12 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($dispatchs);
     });
 
-    $router->post('/api/dispatch/simulate', function() {
-        $db = Flight::db();
-        $dispatchModel = new DispatchModel($db);
-        $dispatchModel = new DispatchModel($db);
-        $count = $db->query("SELECT COUNT(*) FROM BNGRC_dispatch")->fetchColumn();
-        if($count > 0){
-            Flight::json(['status'=>'error','message'=>'Simulation déjà effectuée'], 400);
-            return;
-        }
-
-        try {
-            $db->beginTransaction();
-            $inserted = $dispatchModel->simulateDispatch();
-            $db->commit();
-
-            // Retourner un résumé
-            Flight::json([
-                'status' => 'ok',
-                'data' => [],
-                'statistics' => [
-                    'attributions_creees' => $inserted
-                ]
-            ]);
-        } catch(\Exception $e) {
-            $db->rollBack();
-            Flight::json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
-        }
+   $router->post('/api/dispatch/preview', function() {
+        DispatchController::preview();
     });
 
-    $router->post('/api/dispatch/simulatePreview', function() {
-        $db = Flight::db();
-        $dispatchModel = new DispatchModel($db);
-
-        try {
-            $besoins = $dispatchModel->getBesoinNonComble();
-            $dons = $dispatchModel->getDonDisponible();
-
-            $besoinRemaining = [];
-            foreach($besoins as $b) {
-                $besoinRemaining[$b['id']] = (int)$b['quantite'];
-            }
-
-            $previewDispatches = [];
-            $totalAttributions = 0;
-            $donsUtilises = [];
-            $villesServies = [];
-
-            foreach($dons as $don) {
-                $donQty = (int)$don['quantite'];
-                if($donQty <= 0) continue;
-
-                foreach($besoins as $b) {
-                    if((int)$b['idArticle'] !== (int)$don['idArticle']) continue;
-                    $needId = $b['id'];
-                    $needRem = $besoinRemaining[$needId] ?? 0;
-                    if($needRem <= 0) continue;
-
-                    $alloc = min($donQty, $needRem);
-                    if($alloc <= 0) continue;
-
-                    $previewDispatches[] = [
-                        'idDon' => $don['id'],
-                        'idBesoin' => $needId,
-                        'quantite' => $alloc,
-                        'date_dispatch' => date('Y-m-d H:i:s')
-                    ];
-                    $totalAttributions++;
-
-                    $donQty -= $alloc;
-                    $besoinRemaining[$needId] -= $alloc;
-
-                    if(!in_array($b['idVille'], $villesServies)) {
-                        $villesServies[] = $b['idVille'];
-                    }
-
-                    if($donQty <= 0) break;
-                }
-            }
-
-            Flight::json([
-                'status' => 'ok',
-                'data' => $previewDispatches,
-                'statistics' => [
-                    'attributions_creees' => $totalAttributions,
-                    'villes_servies' => count($villesServies),
-                    'total_besoins' => count($besoins),
-                    'total_dons' => count($dons)
-                ]
-            ]);
-        } catch(\Exception $e) {
-            Flight::json([
-                'status' => 'error',
-                'message' => $e->getMessage()
-            ], 500);
-        }
+    $router->post('/api/dispatch/simulate', function() {
+        DispatchController::simulatePage();
     });
 
 
@@ -276,6 +187,17 @@ $router->group('/', function(Router $router) use ($app) {
         ConfigController::updateFraisAchat();
         $_SESSION['success'] = "Frais mis à jour avec succès";
         Flight::redirect('/achats');
+    });
+
+    $router->get('/api/recap', function() use($app){
+        $db = Flight::db();
+        $besoinModel = new \app\models\BesoinModel($db);
+        $totalBesoin = (float)$besoinModel->getTotalPrice();
+        $totalSatisfait = (float)$besoinModel->getMontantSatisfait();
+        Flight::json([
+            'totalBesoin' => $totalBesoin,
+            'totalSatisfait' => $totalSatisfait
+        ]);
     });
 
     $router->post('/achats/calculer', function() {
@@ -355,6 +277,15 @@ $router->group('/', function(Router $router) use ($app) {
         }
         
         Flight::redirect('/achats');
+    });
+
+    $router->get('/recapitulatif', function() use ($app){
+        $totalBesoin = floatval(BesoinController::getTotalBesoinPrice());
+        $totalSatisfait = BesoinController::getMontantSatisfait();
+        $app->render('recapitulatif',[
+            "totalBesoin" => $totalBesoin,
+            "totalMontantSatisfait" => $totalSatisfait
+        ]);
     });
 
     $router->get('/*', function() use($app){
