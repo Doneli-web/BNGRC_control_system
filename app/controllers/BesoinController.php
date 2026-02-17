@@ -31,4 +31,14 @@ class BesoinController{
         $besoinModel = new BesoinModel(Flight::db());
         $besoinModel->deleteBesoin($id);
     }
+
+    public static function getTotalBesoinPrice(){
+        $besoinModel = new BesoinModel(Flight::db());
+        return $besoinModel->getTotalPrice();
+    }
+
+    public static function getMontantSatisfait(){
+        $besoinModel = new BesoinModel(Flight::db());
+        return $besoinModel->getMontantSatisfait();
+    }
 }

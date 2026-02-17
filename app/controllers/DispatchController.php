@@ -2,6 +2,7 @@
 namespace app\controllers;
 
 use app\models\DispatchModel;
+use app\models\BesoinModel;
 use Flight;
 use PDO;
 
@@ -65,10 +66,15 @@ class DispatchController {
 
             $db->commit();
 
+            // Calculer le montant déjà satisfait (prix_unitaire * quantite_attribuee)
+            $besoinModel = new BesoinModel($db);
+            $montantSatisfait = $besoinModel->getMontantSatisfait();
+
             // Retourner un résumé
             Flight::json([
                 'status' => 'ok',
-                'inserted' => $inserted
+                'inserted' => $inserted,
+                'montant_satisfait' => $montantSatisfait
             ]);
         } catch(\Exception $e){
             $db->rollBack();

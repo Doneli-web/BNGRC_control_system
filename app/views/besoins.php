@@ -29,7 +29,9 @@ ini_set("display_errors", 1);
                 <li><a href="/besoins" class="active">Besoins</a></li>
                 <li><a href="/dons">Dons</a></li>
                 <li><a href="/villes">Villes</a></li>
+                <li><a href="/achats" class="active">Achats</a></li>
                 <li><a href="/simulation">Simulation</a></li>
+                <li><a href="/recapitulatif">Récapitulatif</a></li>
             </ul>
             <button class="nav-toggle" id="navToggle">
                 <span></span>

@@ -117,6 +117,18 @@ $router->group('/', function(Router $router) use ($app) {
         Flight::json($articles);
     });
 
+    // API recap: total besoins and total satisfaits (montant)
+    $router->get('/api/recap', function() use($app){
+        $db = Flight::db();
+        $besoinModel = new \app\models\BesoinModel($db);
+        $totalBesoin = (float)$besoinModel->getTotalPrice();
+        $totalSatisfait = (float)$besoinModel->getMontantSatisfait();
+        Flight::json([
+            'totalBesoin' => $totalBesoin,
+            'totalSatisfait' => $totalSatisfait
+        ]);
+    });
+
        $router->get('/dons', function() use($app){
         DonController::showDonsPage($app);
     });
@@ -232,6 +244,15 @@ $router->group('/', function(Router $router) use ($app) {
         }
         
         Flight::redirect('/achats');
+    });
+
+    $router->get('/recapitulatif', function() use ($app){
+        $totalBesoin = floatval(BesoinController::getTotalBesoinPrice());
+        $totalSatisfait = BesoinController::getMontantSatisfait();
+        $app->render('recapitulatif',[
+            "totalBesoin" => $totalBesoin,
+            "totalMontantSatisfait" => $totalSatisfait
+        ]);
     });
 
     $router->get('/*', function() use($app){
